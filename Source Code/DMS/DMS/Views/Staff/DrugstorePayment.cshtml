@@ -1,0 +1,119 @@
+﻿
+@model IEnumerable<DMS.DAL.Payment>
+<div class="table-responsive">
+    <table class="table display KeyTable dataTable" aria-describedby="example_info">
+        <tbody id="tableDS" data-id="@ViewBag.DrugstoreID">
+            <tr>
+                <td>
+                    <strong>Số nợ hiện tại:</strong>
+                </td>
+                <td>
+                    <label id="debt"></label>
+                    VND         
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>Số tiền thanh toán:</strong>
+                </td>
+                <td>
+                    <input type="text" id="amount" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>Loại thanh toán:</strong>
+                </td>
+                <td>
+                    <select id="paymentType">
+                        <option value="1">Trả tiền</option>
+                        <option value="2">Nợ tiền</option>
+                    </select>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+
+</div>
+<p>
+    <input type="submit" class="btn btn-primary" value="Lưu" onclick="Payment()" />
+</p>
+ <table class="table display Keytable dataTable" id="tablePayment">
+                            <thead>
+                                <th>Mã số hóa đơn</th>
+                                <th>Số lượng</th>
+                                <th>Loại giao dịch</th>
+                                <th>Cân bằng</th>
+                                <th>Ngày</th>
+                            </thead>
+                            <tbody>
+                                @{
+    int index = 0;
+    for (int i = Model.Count() - 1; i >= 0; i--)
+    {
+        index++;
+        if (Model.ElementAt(i).PaymentType == true)
+        {
+                                    <tr>
+                                        <td>@Model.ElementAt(i).PaymentID</td>
+                                        <td>
+                                            <label style="margin-left: 10px; color: red"> @String.Format("{0:0,0}", @Model.ElementAt(i).Amount) VND</label>
+                                        </td>
+                                        <td style="color: red;font-weight:bold 100">Tiêu xài</td>
+                                        <td>
+                                            <label style="margin-left: 10px; color: red"> @String.Format("{0:0,0}", @Model.ElementAt(i).Balance) VND</label>
+                                        </td>
+                                        <td>@Model.ElementAt(i).Date</td>
+                                    </tr>
+        }
+        else
+        {
+                                    <tr>
+                                        <td>@Model.ElementAt(i).PaymentID</td>
+                                        <td>
+                                            <label style="margin-left: 10px; color: blue">@String.Format("{0:0,0}", @Model.ElementAt(i).Amount) VND</label>
+                                        </td>
+                                        <td style="color: blue;font-weight:bold">Chi trả</td>
+                                        <td>
+                                            <label style="margin-left: 10px; color: red">@String.Format("{0:0,0}", @Model.ElementAt(i).Balance) VND</label>
+                                        </td>
+                                        <td>@Model.ElementAt(i).Date</td>
+                                    </tr>
+        }
+
+    }
+                                }
+                            </tbody>
+                        </table>
+<script type="text/javascript">
+    window.onload = GetDebt();
+    function Payment() {
+        var DrugstoreID = $("#tableDS").attr("data-id");
+        var Amount = document.getElementById('amount').value;
+        var element = document.getElementById("paymentType");
+        var PaymentType = element.options[element.selectedIndex].value;
+        $.ajax({
+            url: '/Staff/Payment',
+            method: 'POST',
+            data: { "amount": Amount, "DrugstoreID": DrugstoreID, "paymentType":PaymentType },
+            success: function (result) {
+                document.getElementById('amount').value = "";
+                GetDebt();
+                window.location.href = "/Staff/DrugstoreDetails/" + DrugstoreID;
+            }
+        });
+      //  GetDebt();
+    }
+    function GetDebt() {
+        var DrugstoreID = $("#tableDS").attr("data-id");
+        $.ajax({
+            url: '/Staff/GetDebt',
+            method: 'POST',
+            data: { "DrugstoreID": DrugstoreID },
+            success: function (result) {
+                document.getElementById('debt').textContent = accounting.formatMoney(result, " ", 0) ;
+            }
+        });
+    }
+</script>
