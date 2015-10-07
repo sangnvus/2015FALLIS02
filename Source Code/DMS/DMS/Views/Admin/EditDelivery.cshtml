@@ -47,6 +47,7 @@
             method: 'POST',
             data: { "fullname": fullname, "phonenumber": phonenumber, "address": address, "id": id },
             success: function (result) {
+                window.location.href = '@Url.Action("ManageStaff","Admin")';
                 // $(this).fadeOut("slow");
             }
         });

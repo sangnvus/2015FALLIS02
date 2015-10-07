@@ -12,18 +12,16 @@ namespace DMS.DAL
     using System;
     using System.Collections.Generic;
     
-    public partial class DrugstoreGroup
+    public partial class City
     {
-        public DrugstoreGroup()
+        public City()
         {
-            this.Drugstores = new HashSet<Drugstore>();
+            this.Districts = new HashSet<District>();
         }
     
-        public int DrugstoreGroupID { get; set; }
-        public Nullable<int> SalesmanID { get; set; }
-        public string DrugstoreCentroid { get; set; }
+        public int CityID { get; set; }
+        public string CityName { get; set; }
     
-        public virtual Account Account { get; set; }
-        public virtual ICollection<Drugstore> Drugstores { get; set; }
+        public virtual ICollection<District> Districts { get; set; }
     }
 }

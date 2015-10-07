@@ -18,8 +18,6 @@ namespace DMS.DAL
         {
             this.Districts = new HashSet<District>();
             this.Drugstores = new HashSet<Drugstore>();
-            this.Drugstores1 = new HashSet<Drugstore>();
-            this.DrugstoreGroups = new HashSet<DrugstoreGroup>();
         }
     
         public int AccountID { get; set; }
@@ -34,7 +32,5 @@ namespace DMS.DAL
         public virtual Role Role { get; set; }
         public virtual ICollection<District> Districts { get; set; }
         public virtual ICollection<Drugstore> Drugstores { get; set; }
-        public virtual ICollection<Drugstore> Drugstores1 { get; set; }
-        public virtual ICollection<DrugstoreGroup> DrugstoreGroups { get; set; }
     }
 }

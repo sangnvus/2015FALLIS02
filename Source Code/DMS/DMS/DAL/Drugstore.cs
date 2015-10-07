@@ -25,19 +25,15 @@ namespace DMS.DAL
         public string Address { get; set; }
         public string Coordinate { get; set; }
         public Nullable<int> OwnerID { get; set; }
-        public Nullable<int> DrugstoreGroupID { get; set; }
-        public Nullable<int> ApprovedByStaffID { get; set; }
         public Nullable<int> DrugstoreTypeID { get; set; }
         public Nullable<bool> IsActive { get; set; }
         public Nullable<double> Debt { get; set; }
         public Nullable<int> DistrictID { get; set; }
     
         public virtual Account Account { get; set; }
-        public virtual Account Account1 { get; set; }
         public virtual District District { get; set; }
         public virtual ICollection<DrugOrder> DrugOrders { get; set; }
         public virtual ICollection<Payment> Payments { get; set; }
-        public virtual DrugstoreGroup DrugstoreGroup { get; set; }
         public virtual DrugstoreType DrugstoreType { get; set; }
     }
 }

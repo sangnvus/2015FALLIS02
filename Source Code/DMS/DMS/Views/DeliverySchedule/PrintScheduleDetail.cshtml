@@ -55,7 +55,7 @@
                             </tbody>
                         </table>
                         <label>Danh sách các đơn đặt hàng</label>
-                        <table id="tableOrder" class="dataTable  stripe">
+                        <table id="tableOrder" class="dataTable  stripe" border="1">
                             <thead>
                                 <tr>
                                     <th rowspan="2">Stt</th>
@@ -63,7 +63,7 @@
                                     <th rowspan="2">Số tiền</th>
                                     <th rowspan="2">Nhà thuốc</th>
                                     <th rowspan="2">Địa điểm</th>
-                                    <th rowspan="2">Ngày đặt hàng</th>
+                                    <th rowspan="2" style="width: 200px">Ký nhận</th>
                                 </tr>
                                 <tr>
                                     <th>Tên thuốc</th>
@@ -76,17 +76,17 @@
                                 foreach (var deliveryDetail in @Model.DeliveryScheduleDetails)
                                 {
                                     count++;
-                                <tbody style="border: 2px solid black;">
+                                <tbody>
                                     <tr rowspan="@deliveryDetail.DrugOrder.DrugOrderDetails.Count">
                                         <td rowspan="@deliveryDetail.DrugOrder.DrugOrderDetails.Count">@count</td>
                                         <td>@deliveryDetail.DrugOrder.DrugOrderDetails.ElementAt(0).Drug.DrugName</td>
-                                        <td>@deliveryDetail.DrugOrder.DrugOrderDetails.ElementAt(0).Quantity</td>
+                                        <td>@deliveryDetail.DrugOrder.DrugOrderDetails.ElementAt(0).DeliveryQuantity</td>
                                         <td>@deliveryDetail.DrugOrder.DrugOrderDetails.ElementAt(0).Unit.UnitName</td>
                                          <td rowspan="@deliveryDetail.DrugOrder.DrugOrderDetails.Count"> @String.Format("{0:0,0}",@deliveryDetail.DrugOrder.TotalPrice) VND</td>
                                         <td rowspan="@deliveryDetail.DrugOrder.DrugOrderDetails.Count">@deliveryDetail.DrugOrder.Drugstore.DrugstoreName</td>
                                         <td rowspan="@deliveryDetail.DrugOrder.DrugOrderDetails.Count">@deliveryDetail.DrugOrder.Drugstore.Address</td>
-                                        <td rowspan="@deliveryDetail.DrugOrder.DrugOrderDetails.Count">@deliveryDetail.DrugOrder.DateOrder</td>
-
+                                        @*<td rowspan="@deliveryDetail.DrugOrder.DrugOrderDetails.Count">@deliveryDetail.DrugOrder.DateOrder</td>*@
+                                        <td rowspan="@deliveryDetail.DrugOrder.DrugOrderDetails.Count"></td>
                                     </tr>
                                     @for (int i = 1; i < deliveryDetail.DrugOrder.DrugOrderDetails.Count; i++)
                                     {
@@ -96,9 +96,9 @@
                                             <td>@deliveryDetail.DrugOrder.DrugOrderDetails.ElementAt(i).Unit.UnitName</td>
                                         </tr>
                                     }
-                                    <tr>
+                                    @*<tr>
                                         <td colspan="7">---------------------------------------------------------------------------------------------------------------------</td>
-                                    </tr>
+                                    </tr>*@
                                 </tbody>
                                 }
                             }

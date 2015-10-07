@@ -17,6 +17,7 @@ namespace DMS.DAL
         public int DeliveryScheduleDetailsID { get; set; }
         public int DeliveryScheduleID { get; set; }
         public int DrugOrderID { get; set; }
+        public int Status { get; set; }
     
         public virtual DeliverySchedule DeliverySchedule { get; set; }
         public virtual DrugOrder DrugOrder { get; set; }

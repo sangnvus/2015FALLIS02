@@ -21,6 +21,8 @@ namespace DMS.DAL
         public Nullable<double> Balance { get; set; }
         public System.DateTime Date { get; set; }
         public Nullable<bool> IsActive { get; set; }
+        public string FullName { get; set; }
+        public string PhoneNumber { get; set; }
     
         public virtual Drugstore Drugstore { get; set; }
     }

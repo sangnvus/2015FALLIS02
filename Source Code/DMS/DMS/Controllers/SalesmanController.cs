@@ -26,7 +26,7 @@ namespace DMS.Controllers
             var salesman = (Account)Session["User"];
             var salesmanID = salesman.AccountID;
             //var listDistrict = unitOfWork.DistrictRepository.Get(b => b.SalesmanID == salesmanID).ToList();
-            var listDrugstore = unitOfWork.DrugStoreRepository.GetAll().Where(d => d.District.SalesmanID == salesmanID && d.Account != null && d.Account.IsPending == false  
+            var listDrugstore = unitOfWork.DrugStoreRepository.Get(d => d.District.SalesmanID == salesmanID && d.Account != null && d.Account.IsPending == false  
                 &&d.Account.IsActive == true).ToList();
             return View(listDrugstore);
         }
@@ -34,7 +34,7 @@ namespace DMS.Controllers
         {
             var salesman = (Account)Session["User"];
             var salesmanID = salesman.AccountID;
-            var listDrugstore = unitOfWork.DrugStoreRepository.GetAll().Where(d => d.District.SalesmanID == salesmanID && d.Account == null).ToList();
+            var listDrugstore = unitOfWork.DrugStoreRepository.Get(d => d.District.SalesmanID == salesmanID && d.Account == null).ToList();
             return View(listDrugstore);
         }
         /// <summary>
@@ -61,7 +61,7 @@ namespace DMS.Controllers
             var salesman = (Account)Session["User"];
             var salesmanID = salesman.AccountID;
             var drugstore = unitOfWork.DrugStoreRepository.GetByID(id);
-            drugstore.DrugstoreGroup.SalesmanID = salesmanID;
+            //drugstore.DrugstoreGroup.SalesmanID = salesmanID;
             unitOfWork.DrugStoreRepository.Update(drugstore);
             unitOfWork.DrugStoreRepository.SaveChanges();
             return RedirectToAction("ListDrugstoreNotVerify", "Salesman");
@@ -84,9 +84,8 @@ namespace DMS.Controllers
 
             var salesman = (Account)Session["User"];
             var salesmanID = salesman.AccountID;
-            var listDrugstoreID = unitOfWork.DrugStoreRepository.Get(s => s.DrugstoreGroup.SalesmanID == salesmanID);
+            var listDrugstoreID = unitOfWork.DrugStoreRepository.Get(s => s.District.SalesmanID == salesmanID);
             var listOrder = new List<DrugOrder>();
-
             for (int i = 0; i < listDrugstoreID.Count(); i++)
             {
                 var drugstoreID = listDrugstoreID.ElementAt(i).DrugstoreID;
@@ -139,7 +138,7 @@ namespace DMS.Controllers
                     {
                         DrugId = drug.DrugID,
                         DrugName = drug.DrugName,
-                        DrugCompany = drug.DrugCompany.DrugCompanyName,
+                        //DrugCompany = drug.DrugCompany.DrugCompanyName,
                         ActualValue = (100 - double.Parse(drug.DiscountRates.Where(b => b.DrugstoreTypeID == drugstoreTypeID).Select(b => b.Discount).SingleOrDefault().ToString())) / 100,
                         DrugType = drug.DrugType.DrugTypeName,
                         Price = drug.Prices.Where(b => b.UnitID == 2).Select(b => b.UnitPrice),

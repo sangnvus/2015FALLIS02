@@ -133,6 +133,9 @@
     <Compile Include="DAL\AccountProfile.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="DAL\City.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="DAL\Context.cs" />
     <Compile Include="DAL\DeliveryMan.cs">
       <DependentUpon>Model1.tt</DependentUpon>
@@ -162,9 +165,6 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="DAL\Drugstore.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
-    </Compile>
-    <Compile Include="DAL\DrugstoreGroup.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="DAL\DrugstoreType.cs">
@@ -373,6 +373,7 @@
     <Content Include="assets\js\jquery.prettyPhoto.min.js" />
     <Content Include="assets\js\jquery.raty.min.js" />
     <Content Include="assets\js\jquery.validate.js" />
+    <Content Include="assets\js\numeral.js" />
     <Content Include="assets\js\owl.carousel.min.js" />
     <Content Include="assets\js\respond.min.js" />
     <Content Include="assets\js\scripts.js" />
@@ -385,6 +386,7 @@
     <Content Include="assets\less\bootstrap\print.css" />
     <Content Include="assets\less\bootstrap\theme.css" />
     <Content Include="assets\less\bootstrap\variables.css" />
+    <Content Include="assets\less\numeral.min.js" />
     <Content Include="ckeditor\adapters\jquery.js" />
     <Content Include="ckeditor\build-config.js" />
     <Content Include="ckeditor\ckeditor.js" />
@@ -1092,6 +1094,11 @@
       <LastGenOutput>Model1.cs</LastGenOutput>
     </Content>
     <Content Include="Views\Staff\ListDistrict.cshtml" />
+    <Content Include="Views\Staff\ReviewOrder.cshtml" />
+    <Content Include="Views\Admin\EditDelivery.cshtml" />
+    <Content Include="Views\Admin\CreateDelivery.cshtml" />
+    <Content Include="Views\Admin\CreateSalesman.cshtml" />
+    <Content Include="Views\Admin\CreateStaff.cshtml" />
     <None Include="Web.Debug.config" />
     <None Include="Web.Release.config" />
   </ItemGroup>

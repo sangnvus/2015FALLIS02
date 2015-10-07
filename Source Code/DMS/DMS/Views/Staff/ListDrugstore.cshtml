@@ -23,223 +23,162 @@
                     <table class="table  KeyTable dataTable" id="" aria-describedby="example_info">
                         <thead>
                             <tr>
-                                <th>Nhóm   </th>
-                                <th>Nhân viên tiếp thị   </th>
+                                <th>Stt  </th>
                                 <th>Tên nhà thuốc     </th>
                                 <th>Địa chỉ      </th>
                                 <th>Tên tài khoản </th>
+                                <th>Nhân viên tiếp thị   </th>
                                 <th style="width:100px"></th>
                             </tr>
                         </thead>
-                        @{
-                            var listDrugstoreGroups = (List<DrugstoreGroup>)ViewBag.ListDrugstoreGroup;
-                            int count = 0;
-                            var drugstorelist = Model.Where(b => b.DrugstoreGroupID == null).ToList();
-                            for (int i = 0; i < drugstorelist.Count(); i++)
-                            {
-                                var item = drugstorelist.ElementAt(i);
-                                <tbody id="count">
-                                     <tr>
-                                    @{
-                                        <td><span style="color: red; font-weight: bold">Chưa có</span>
-                                        </td>
-                                        <td><span style="color: red; font-weight: bold">Chưa có</span></td>
-
-                                    //var itemFirst = listDrugstores[0];
-                                        <td>
-                                            <a href="@Url.Action("DrugstoreDetails", "Staff", new { id = item.DrugstoreID })">@Html.DisplayFor(modelItem => item.DrugstoreName)</a>
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Address)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Account.Email)
-                                        </td>
-                                        <td>
-                                            @Html.ActionLink("Sửa", "EditDrugstore", new { id = item.DrugstoreID }, new { @class = "btn btn-primary" })
-                                            @if (item.Account == null)
-                                            {
-                                                @Html.ActionLink("Xoá", "DeleteDrugstore", new { id = item.DrugstoreID }, new { @class = "btn btn-danger" })
-                                            }
-                                        </td>
-                                    }
-
-                                </tr>
-                                </tbody>
-                            }
-                            foreach (var drugstoreGroup in listDrugstoreGroups)
-                            {
-                                var listdrugstore = (List<Drugstore>)Model;
-                                List<Drugstore> listDrugstores = listdrugstore.FindAll(b => b.DrugstoreGroupID == drugstoreGroup.DrugstoreGroupID).ToList();
-                                if (listDrugstores.Count > 0)
+                        <tbody id="count">
+                            @{
+                                int i = 0;
+                                foreach (var item in Model)
                                 {
-  
-                                
-                            <tbody id="count">
-
-                                <tr>
-                                    @{
-                                        <td rowspan="@listDrugstores.Count">Nhóm @Html.DisplayFor(modelItem => drugstoreGroup.DrugstoreGroupID)
-                                        </td>
-                                    if (drugstoreGroup.Account != null)
-                                    {
-                                        <td rowspan="@listDrugstores.Count">@Html.DisplayFor(modelItem => drugstoreGroup.Account.Email)
-                                        </td>
-                                    }
-                                    else
-                                    {
-                                        <td rowspan="@listDrugstores.Count"><span style="color: red; font-weight: bold">Chưa có</span></td>
-                                    }
-
-                                    var itemFirst = listDrugstores[0];
-                                        <td>
-                                            <a href="@Url.Action("DrugstoreDetails", "Staff", new { id = itemFirst.DrugstoreID })">@Html.DisplayFor(modelItem => itemFirst.DrugstoreName)</a>
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => itemFirst.Address)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => itemFirst.Account.Email)
-                                        </td>
-                                        <td>
-                                            @Html.ActionLink("Sửa", "EditDrugstore", new { id = itemFirst.DrugstoreID }, new { @class = "btn btn-primary" })
-                                            @if (itemFirst.Account == null)
-                                            {
-                                                @Html.ActionLink("Xoá", "DeleteDrugstore", new { id = itemFirst.DrugstoreID }, new { @class = "btn btn-danger" })
-                                            }
-                                        </td>
-                                    }
-
-                                </tr>
-                                @for (int i = 1; i < listDrugstores.Count; i++)
-                                {
-                                    var item = listDrugstores[i];
+                                    i++;
                                     <tr>
-                                        <td>
-                                            <a href="@Url.Action("DrugstoreDetails", "Staff", new { id = item.DrugstoreID })">@Html.DisplayFor(modelItem => item.DrugstoreName)</a>
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Address)
-                                        </td>
+                                        @{
+                                            <td>@i</td>
+                                            <td>
+                                                <a href="@Url.Action("DrugstoreDetails", "Staff", new { id = item.DrugstoreID })">@Html.DisplayFor(modelItem => item.DrugstoreName)</a>
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Address)
+                                            </td>
+                                    if (item.Account != null)
+                                    {
                                         <td>
                                             @Html.DisplayFor(modelItem => item.Account.Email)
                                         </td>
-                                        <td>
-                                            @Html.ActionLink("Sửa", "EditDrugstore", new { id = item.DrugstoreID }, new { @class = "btn btn-primary" })
-                                            @if (item.Account == null)
-                                            {
-                                                @Html.ActionLink("Xoá", "DeleteDrugstore", new { id = item.DrugstoreID }, new { @class = "btn btn-danger" })
-                                            }
-                                        </td>
-                                    </tr>
-                                }
-
-                            </tbody>
-                                }
-                            }
-                        }
-                        @* @foreach (var item in Model)
-                        {
-                            if (item.DrugstoreGroup != null)
-                            {
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <a href="@Url.Action("DrugstoreDetails", "Staff", new { id = item.DrugstoreID })">@Html.DisplayFor(modelItem => item.DrugstoreName)</a>
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Address)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Account.UserName)
-                                    </td>
-                                    <td>Nhóm @Html.DisplayFor(modelItem => item.DrugstoreGroup.DrugstoreGroupID)
-                                    </td>
-                                    @if (item.DrugstoreGroup.Account != null)
-                                    {
-                                        <td>@Html.DisplayFor(modelItem => item.DrugstoreGroup.Account.UserName)
-                                        </td>
+                                            <td>@Html.DisplayFor(modelItem => item.District.Account.Email)</td>
                                     }
                                     else
                                     {
                                         <td></td>
+                                        <td></td>
                                     }
 
                                     <td>
-                                        @Html.ActionLink("Sửa", "EditDrugstore", new { id = item.DrugstoreID }) |
-                                @Html.ActionLink("Xoá", "DeleteDrugstore", new { id = item.DrugstoreID })
+                                        @Html.ActionLink("Sửa", "EditDrugstore", new { id = item.DrugstoreID }, new { @class = "btn btn-primary" })
+                                        @if (item.Account == null)
+                                        {
+                                            @Html.ActionLink("Xoá", "DeleteDrugstore", new { id = item.DrugstoreID }, new { @class = "btn btn-danger" })
+                                        }
                                     </td>
-                                </tr>
-                            </tbody>
+                                        }
+                                    </tr>
+                                }
                             }
-                            else
-                            {
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <a href="@Url.Action("DrugstoreDetails", "Staff", new { id = item.DrugstoreID })">@Html.DisplayFor(modelItem => item.DrugstoreName)</a>
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Address)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Account.UserName)
-                                    </td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>
-                                      @Html.ActionLink("Sửa", "EditDrugstore", new { id = item.DrugstoreID }) |
-                                      @Html.ActionLink("Xoá", "DeleteDrugstore", new { id = item.DrugstoreID })
-                                    </td>
-                                </tr>
-                            </tbody>
-                            }
+                        </tbody>
 
-                        }*@
+                        @*@{
+                                var listDrugstoreGroups = (List<DrugstoreGroup>)ViewBag.ListDrugstoreGroup;
+                                int count = 0;
+                                var drugstorelist = Model.Where(b => b.DrugstoreGroupID == null).ToList();
+                                for (int i = 0; i < drugstorelist.Count(); i++)
+                                {
+                                    var item = drugstorelist.ElementAt(i);
+                                    <tbody id="count">
+                                         <tr>
+                                        @{
+                                            <td><span style="color: red; font-weight: bold">Chưa có</span>
+                                            </td>
+                                            <td><span style="color: red; font-weight: bold">Chưa có</span></td>
+
+                                        //var itemFirst = listDrugstores[0];
+                                            <td>
+                                                <a href="@Url.Action("DrugstoreDetails", "Staff", new { id = item.DrugstoreID })">@Html.DisplayFor(modelItem => item.DrugstoreName)</a>
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Address)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Account.Email)
+                                            </td>
+                                            <td>
+                                                @Html.ActionLink("Sửa", "EditDrugstore", new { id = item.DrugstoreID }, new { @class = "btn btn-primary" })
+                                                @if (item.Account == null)
+                                                {
+                                                    @Html.ActionLink("Xoá", "DeleteDrugstore", new { id = item.DrugstoreID }, new { @class = "btn btn-danger" })
+                                                }
+                                            </td>
+                                        }
+
+                                    </tr>
+                                    </tbody>
+                                }
+                                foreach (var drugstoreGroup in listDrugstoreGroups)
+                                {
+                                    var listdrugstore = (List<Drugstore>)Model;
+                                    List<Drugstore> listDrugstores = listdrugstore.FindAll(b => b.DrugstoreGroupID == drugstoreGroup.DrugstoreGroupID).ToList();
+                                    if (listDrugstores.Count > 0)
+                                    {
 
 
-                        @*<tbody>
-                            @foreach (var item in Model)
-                            {
-                                <tr>
-                                    <td>
-                                        <a href="@Url.Action("DrugstoreDetails", "Staff", new { id = item.DrugstoreID })">@Html.DisplayFor(modelItem => item.DrugstoreName)</a>
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Address)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Account.UserName)
-                                    </td>
+                                <tbody id="count">
 
-                                    @if (item.DrugstoreGroup != null)
+                                    <tr>
+                                        @{
+                                            <td rowspan="@listDrugstores.Count">Nhóm @Html.DisplayFor(modelItem => drugstoreGroup.DrugstoreGroupID)
+                                            </td>
+                                        if (drugstoreGroup.Account != null)
+                                        {
+                                            <td rowspan="@listDrugstores.Count">@Html.DisplayFor(modelItem => drugstoreGroup.Account.Email)
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td rowspan="@listDrugstores.Count"><span style="color: red; font-weight: bold">Chưa có</span></td>
+                                        }
+
+                                        var itemFirst = listDrugstores[0];
+                                            <td>
+                                                <a href="@Url.Action("DrugstoreDetails", "Staff", new { id = itemFirst.DrugstoreID })">@Html.DisplayFor(modelItem => itemFirst.DrugstoreName)</a>
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => itemFirst.Address)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => itemFirst.Account.Email)
+                                            </td>
+                                            <td>
+                                                @Html.ActionLink("Sửa", "EditDrugstore", new { id = itemFirst.DrugstoreID }, new { @class = "btn btn-primary" })
+                                                @if (itemFirst.Account == null)
+                                                {
+                                                    @Html.ActionLink("Xoá", "DeleteDrugstore", new { id = itemFirst.DrugstoreID }, new { @class = "btn btn-danger" })
+                                                }
+                                            </td>
+                                        }
+
+                                    </tr>
+                                    @for (int i = 1; i < listDrugstores.Count; i++)
                                     {
-                                        <td>Nhóm @Html.DisplayFor(modelItem => item.DrugstoreGroup.DrugstoreGroupID)
-                                        </td>
+                                        var item = listDrugstores[i];
+                                        <tr>
+                                            <td>
+                                                <a href="@Url.Action("DrugstoreDetails", "Staff", new { id = item.DrugstoreID })">@Html.DisplayFor(modelItem => item.DrugstoreName)</a>
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Address)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Account.Email)
+                                            </td>
+                                            <td>
+                                                @Html.ActionLink("Sửa", "EditDrugstore", new { id = item.DrugstoreID }, new { @class = "btn btn-primary" })
+                                                @if (item.Account == null)
+                                                {
+                                                    @Html.ActionLink("Xoá", "DeleteDrugstore", new { id = item.DrugstoreID }, new { @class = "btn btn-danger" })
+                                                }
+                                            </td>
+                                        </tr>
                                     }
-                                    else
-                                    {
-                                        <td>
-                                        </td>
+
+                                </tbody>
                                     }
-                                    @if (item.DrugstoreGroup.Account != null)
-                                    {
-                                        <td>@Html.DisplayFor(modelItem => item.DrugstoreGroup.Account.UserName)
-                                        </td>
-                                    }
-                                    else
-                                    {
-                                        <td>
-                                        </td>
-                                    }
-                                    
-                                    <td>
-                                        @Html.ActionLink("Sửa", "EditDrugstore", new { id = item.DrugstoreID }) |
-                                        @Html.ActionLink("Xoá", "DeleteDrugstore", new { id = item.DrugstoreID })
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>*@
+                                }
+                            }*@
                     </table>
                 </div>
                 <br />
@@ -248,7 +187,7 @@
                     @using (Html.BeginForm("ImportExcel", "Staff", FormMethod.Post,
                         new { enctype = "multipart/form-data" }))
                     {
-                    
+
                         <input type="file" name="file" id="file" />
                         <input type="submit" value="OK" />
                     }
@@ -263,7 +202,7 @@
         //var table = $('#TableDrugstore').DataTable();
         //new $.fn.dataTable.KeyTable(table);
 
-        var table=$('#TableDrugstore').dataTable({
+        var table = $('#TableDrugstore').dataTable({
             "oLanguage": {
                 "sSearch": "Tìm kiếm:",
                 "sLengthMenu": "Hiển thị _MENU_ nhà thuốc",

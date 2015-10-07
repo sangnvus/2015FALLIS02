@@ -64,6 +64,75 @@ namespace DMS.Controllers
             unitOfWork.DeliveryScheduleRepository.SaveChanges();
             return null;
         }
+        public ActionResult CompleteItem(int deliveryDetailID)
+        {
+            var deliveryDetails = unitOfWork.DeliveryScheduleDetailsRepository.GetByID(deliveryDetailID);
+            deliveryDetails.Status = (int)Status.StatusEnum.Complete;
+            var drugOrder = deliveryDetails.DrugOrder;
+            var drugstore = drugOrder.Drugstore;
+            drugOrder.Status = (int)Status.StatusEnum.Complete;
+            unitOfWork.DrugOrderRepository.Update(drugOrder);
+            unitOfWork.DrugOrderRepository.SaveChanges();
+            var payment = new Payment();
+            var paymentHistory = unitOfWork.PaymentRepository.Get(b => b.DrugstoreID == drugOrder.DrugstoreID);
+            if (paymentHistory.Count() == 0)
+            {
+                payment.DrugstoreID = drugOrder.DrugstoreID;
+                payment.Amount = drugOrder.TotalPrice;
+                payment.Balance = 0 - drugOrder.TotalPrice;
+                drugstore.Debt = 0 - drugOrder.TotalPrice;
+            }
+            else
+            {
+                payment.DrugstoreID = drugOrder.DrugstoreID;
+                payment.Amount = drugOrder.TotalPrice;
+                payment.Balance = paymentHistory.Last().Balance - drugOrder.TotalPrice;
+                drugstore.Debt = drugstore.Debt - drugOrder.TotalPrice;
+            }
+            payment.Date = DateTime.Now;
+            payment.PaymentType = true;
+            payment.IsActive = true;
+            unitOfWork.DrugStoreRepository.Update(drugstore);
+            unitOfWork.DrugStoreRepository.SaveChanges();
+            unitOfWork.PaymentRepository.Insert(payment);
+            unitOfWork.PaymentRepository.SaveChanges();
+            var deliverySchedule = deliveryDetails.DeliverySchedule;
+            if (deliverySchedule.DeliveryScheduleDetails.Count(b => b.Status==(int)Status.StatusEnum.Inprogress)>0)
+            {
+                return RedirectToAction("ScheduleDetail", new { scheduleID = deliverySchedule.DeliveryScheduleID });
+            }
+            else
+            {
+                deliverySchedule.Status = (int) Status.StatusEnum.Complete;
+                unitOfWork.DeliveryScheduleRepository.SaveChanges();
+                return RedirectToAction("List");
+            }
+            
+        }
+        public ActionResult DeleteItem(int deliveryDetailID)
+        {
+            var deliveryDetails = unitOfWork.DeliveryScheduleDetailsRepository.GetByID(deliveryDetailID);
+            deliveryDetails.Status = (int)Status.StatusEnum.Deleted;
+            var drugOrder = deliveryDetails.DrugOrder;
+            var drugstore = drugOrder.Drugstore;
+            drugOrder.Status = (int)Status.StatusEnum.Deleted;
+            unitOfWork.DrugOrderRepository.Update(drugOrder);
+            unitOfWork.DrugOrderRepository.SaveChanges();
+            unitOfWork.DrugStoreRepository.Update(drugstore);
+            unitOfWork.DrugStoreRepository.SaveChanges();
+            var deliverySchedule = deliveryDetails.DeliverySchedule;
+            if (deliverySchedule.DeliveryScheduleDetails.Count(b => b.Status == (int)Status.StatusEnum.Inprogress) > 0)
+            {
+                return RedirectToAction("ScheduleDetail", new { scheduleID = deliverySchedule.DeliveryScheduleID});
+            }
+            else
+            {
+                deliverySchedule.Status = (int)Status.StatusEnum.Complete;
+                unitOfWork.DeliveryScheduleRepository.SaveChanges();
+                return RedirectToAction("List");
+            }
+
+        }
         [HttpPost]
         public ActionResult DeleteSchedule(int deliveryScheduleID)
         {
@@ -136,6 +205,7 @@ namespace DMS.Controllers
                     scheduleDetail = new DeliveryScheduleDetail();
                     order = new DrugOrder();
                     scheduleDetail.DrugOrderID = resuledList[i].DrugOrder.DrugOrderID;
+                    scheduleDetail.Status =(int) Status.StatusEnum.Inprogress;
                     order = resuledList[i].DrugOrder;
                     order.Status = (int)Status.StatusEnum.Inprogress;
                     unitOfWork.DrugOrderRepository.Update(order);

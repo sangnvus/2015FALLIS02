@@ -20,6 +20,8 @@ namespace DMS.DAL
         public int UnitID { get; set; }
         public int Quantity { get; set; }
         public Nullable<double> UnitPrice { get; set; }
+        public Nullable<int> DeliveryQuantity { get; set; }
+        public string Note { get; set; }
     
         public virtual Drug Drug { get; set; }
         public virtual DrugOrder DrugOrder { get; set; }

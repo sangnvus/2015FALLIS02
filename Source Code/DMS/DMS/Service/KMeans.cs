@@ -31,16 +31,16 @@ namespace DMS.Service
             }
             return null;
         }
-        public List<Tuple<List<Drugstore>, string>> Processing(int numberCluster)
-        {
-            List<Drugstore> allStore = unitOfWork.DrugStoreRepository.Get(b => b.DrugstoreGroup == null).ToList();
-            if (allStore.Count != 0)
-            {
-                //int numberOfCluster = unitOfWork.AccountRepository.GetAll().Where(a => a.RoleID == 3).Count();
-                return DoKMeans(allStore, numberCluster);
-            }
-            return null;
-        }
+        //public List<Tuple<List<Drugstore>, string>> Processing(int numberCluster)
+        //{
+        //    List<Drugstore> allStore = unitOfWork.DrugStoreRepository.Get(b => b.DrugstoreGroup == null).ToList();
+        //    if (allStore.Count != 0)
+        //    {
+        //        //int numberOfCluster = unitOfWork.AccountRepository.GetAll().Where(a => a.RoleID == 3).Count();
+        //        return DoKMeans(allStore, numberCluster);
+        //    }
+        //    return null;
+        //}
         private double deg2rad(double deg)
         {
             return (deg * Math.PI / 180.0);

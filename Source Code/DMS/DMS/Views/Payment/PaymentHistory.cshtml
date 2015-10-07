@@ -12,7 +12,7 @@
 {
     <section id="cart-page">
         <div class="container">
-            <div id="item-content" class="col-xs-12 col-md-9 items-holder no-margin">
+            <div id="item-content" class="col-xs-12  items-holder no-margin">
                 <div class="panel panel-primary">
                     <div class="panel-heading">Lịch sử thanh toán</div>
                     <div class="panel-body">
@@ -44,6 +44,8 @@
                                 <th>Loại giao dịch</th>
                                 <th>Cân bằng</th>
                                 <th>Ngày</th>
+                                <th>Người giao dịch</th>
+                                <th>Số điện thoại</th>
                             </thead>
                             <tbody>
                                 @{
@@ -62,7 +64,9 @@
                                         <td>
                                             <label style="margin-left: 10px; color: red">@String.Format("{0:0,0}", @Model.ElementAt(i).Amount) VND</label>
                                         </td>
-                                        <td>@Model.ElementAt(i).Date</td>
+                                        <td>@Model.ElementAt(i).Date.ToString("yyyy/mm/dd")</td>
+                                        <td>@Model.ElementAt(i).FullName</td>
+                                        <td>@Model.ElementAt(i).PhoneNumber</td>
                                     </tr>
         }
         else
@@ -76,9 +80,11 @@
                                         <td>
                                             <label style="margin-left: 10px; color: red">@String.Format("{0:0,0}", @Model.ElementAt(i).Amount) VND</label>
                                         </td>
-                                        <td>@Model.ElementAt(i).Date</td>
+                                        <td>@Model.ElementAt(i).Date.ToString("yyyy/mm/dd")</td>
+                                        <td>@Model.ElementAt(i).FullName</td>
+                                        <td>@Model.ElementAt(i).PhoneNumber</td>
                                     </tr>
-        }
+        }   
 
     }
                                 }

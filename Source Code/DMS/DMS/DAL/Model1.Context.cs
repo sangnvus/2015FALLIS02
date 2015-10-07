@@ -27,6 +27,7 @@ namespace DMS.DAL
     
         public virtual DbSet<Account> Accounts { get; set; }
         public virtual DbSet<AccountProfile> AccountProfiles { get; set; }
+        public virtual DbSet<City> Cities { get; set; }
         public virtual DbSet<DeliveryMan> DeliveryMen { get; set; }
         public virtual DbSet<DeliverySchedule> DeliverySchedules { get; set; }
         public virtual DbSet<DeliveryScheduleDetail> DeliveryScheduleDetails { get; set; }
@@ -37,7 +38,6 @@ namespace DMS.DAL
         public virtual DbSet<DrugOrder> DrugOrders { get; set; }
         public virtual DbSet<DrugOrderDetail> DrugOrderDetails { get; set; }
         public virtual DbSet<Drugstore> Drugstores { get; set; }
-        public virtual DbSet<DrugstoreGroup> DrugstoreGroups { get; set; }
         public virtual DbSet<DrugstoreType> DrugstoreTypes { get; set; }
         public virtual DbSet<DrugType> DrugTypes { get; set; }
         public virtual DbSet<Payment> Payments { get; set; }

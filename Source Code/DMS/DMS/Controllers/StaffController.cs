@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.WebPages;
 using DMS.DAL;
 using System.Data.Objects.SqlClient;
 using System.Data;
@@ -321,7 +322,7 @@ namespace DMS.Controllers
             if (Session["Email"] != null && Session["UserRole"].ToString().Equals("Staff"))
             {
                 var listDrugstore = unitOfWork.DrugStoreRepository.GetAll();
-                ViewBag.ListDrugstoreGroup = unitOfWork.DrugstoreGroupRepository.GetAll();
+                //ViewBag.ListDrugstoreGroup = unitOfWork.DrugstoreGroupRepository.GetAll();
                 return View(listDrugstore.ToList());
             }
             return RedirectToAction("Index", "Home");
@@ -332,6 +333,8 @@ namespace DMS.Controllers
         {
             if (Session["Email"] != null && Session["UserRole"].ToString().Equals("Staff"))
             {
+                var listCity = unitOfWork.CityRepository.GetAll();
+                ViewBag.City = listCity;
                 //ViewBag.DistrictID = new SelectList(unitOfWork.DistrictRepository.GetAll(), "DistrictID", "DistrictName");
                 return View();
             }
@@ -386,111 +389,111 @@ namespace DMS.Controllers
 
         public ActionResult DeleteDrugstore(int id)
         {
-            try
-            {
-                var drugstoretemp = unitOfWork.DrugStoreRepository.GetByID(id);
-                //drugstoretemp.DrugstoreName = drugStore.DrugstoreName;
-                //drugstoretemp.Address = drugStore.Address;
-                //drugstoretemp.Coordinate = drugStore.Coordinate;
-                //drugstoretemp.DrugstoreTypeID = drugStore.DrugstoreTypeID;
-                if (drugstoretemp.DrugstoreGroupID != null)
-                {
-                    var drugstoreGroupID = drugstoretemp.DrugstoreGroupID;
+            //try
+            //{
+            //    var drugstoretemp = unitOfWork.DrugStoreRepository.GetByID(id);
+            //    //drugstoretemp.DrugstoreName = drugStore.DrugstoreName;
+            //    //drugstoretemp.Address = drugStore.Address;
+            //    //drugstoretemp.Coordinate = drugStore.Coordinate;
+            //    //drugstoretemp.DrugstoreTypeID = drugStore.DrugstoreTypeID;
+            //    if (drugstoretemp.DrugstoreGroupID != null)
+            //    {
+            //        var drugstoreGroupID = drugstoretemp.DrugstoreGroupID;
 
-                    if (drugstoretemp.OwnerID == null)
-                    {
-                        unitOfWork.DrugStoreRepository.Delete(drugstoretemp);
-                        unitOfWork.DrugStoreRepository.SaveChanges();
-                    }
-                    var drugstoreGroup = unitOfWork.DrugstoreGroupRepository.GetByID(drugstoreGroupID);
-                    //var listDrugstore = unitOfWork.DrugStoreRepository.Get(b => b.DrugstoreGroupID==drugstoreGroupID).ToList();
-                    if (drugstoreGroup.Drugstores.Count == 0)
-                    {
-                        unitOfWork.DrugstoreGroupRepository.Delete(drugstoreGroup);
-                        unitOfWork.DrugstoreGroupRepository.SaveChanges();
-                    }
-                }
-                else
-                {
-                    if (drugstoretemp.OwnerID == null)
-                    {
-                        unitOfWork.DrugStoreRepository.Delete(drugstoretemp);
-                        unitOfWork.DrugStoreRepository.SaveChanges();
-                    }
-                }
-            }
-            catch (Exception)
-            {
+            //        if (drugstoretemp.OwnerID == null)
+            //        {
+            //            unitOfWork.DrugStoreRepository.Delete(drugstoretemp);
+            //            unitOfWork.DrugStoreRepository.SaveChanges();
+            //        }
+            //        var drugstoreGroup = unitOfWork.DrugstoreGroupRepository.GetByID(drugstoreGroupID);
+            //        //var listDrugstore = unitOfWork.DrugStoreRepository.Get(b => b.DrugstoreGroupID==drugstoreGroupID).ToList();
+            //        if (drugstoreGroup.Drugstores.Count == 0)
+            //        {
+            //            unitOfWork.DrugstoreGroupRepository.Delete(drugstoreGroup);
+            //            unitOfWork.DrugstoreGroupRepository.SaveChanges();
+            //        }
+            //    }
+            //    else
+            //    {
+            //        if (drugstoretemp.OwnerID == null)
+            //        {
+            //            unitOfWork.DrugStoreRepository.Delete(drugstoretemp);
+            //            unitOfWork.DrugStoreRepository.SaveChanges();
+            //        }
+            //    }
+            //}
+            //catch (Exception)
+            //{
 
-            }
+            //}
 
 
             return RedirectToAction("ListDrugstore");
 
             // return View(drugStore);
         }
-        public ActionResult ListDrugstoreGroup()
-        {
-            var listDrugstoreGroup = unitOfWork.DrugstoreGroupRepository.GetAll();
-            //ViewBag.ListDrugstoreGroup = unitOfWork.DrugstoreGroupRepository.GetAll();
-            return View(listDrugstoreGroup.ToList());
-        }
-        public ActionResult EditDrugstoreGroup(int id = 0)
-        {
-            ViewBag.DrugstoreGroupID = id;
-            var drugstoreGroup = unitOfWork.DrugstoreGroupRepository.GetByID(id);
-            if (drugstoreGroup == null)
-            {
-                return HttpNotFound();
-            }
-            if (drugstoreGroup.Account != null)
-            {
-                ViewBag.SalesmanID = new SelectList(unitOfWork.AccountRepository.Get(b => b.RoleID == 3 && b.IsActive == true), "AccountID", "Username", drugstoreGroup.SalesmanID);
-            }
-            else
-            {
-                ViewBag.SalesmanID = new SelectList(unitOfWork.AccountRepository.Get(b => b.RoleID == 3 && b.IsActive == true), "AccountID", "Username");
+        //public ActionResult ListDrugstoreGroup()
+        //{
+        //    var listDrugstoreGroup = unitOfWork.DrugstoreGroupRepository.GetAll();
+        //    //ViewBag.ListDrugstoreGroup = unitOfWork.DrugstoreGroupRepository.GetAll();
+        //    return View(listDrugstoreGroup.ToList());
+        //}
+        //public ActionResult EditDrugstoreGroup(int id = 0)
+        //{
+        //    ViewBag.DrugstoreGroupID = id;
+        //    var drugstoreGroup = unitOfWork.DrugstoreGroupRepository.GetByID(id);
+        //    if (drugstoreGroup == null)
+        //    {
+        //        return HttpNotFound();
+        //    }
+        //    if (drugstoreGroup.Account != null)
+        //    {
+        //        ViewBag.SalesmanID = new SelectList(unitOfWork.AccountRepository.Get(b => b.RoleID == 3 && b.IsActive == true), "AccountID", "Username", drugstoreGroup.SalesmanID);
+        //    }
+        //    else
+        //    {
+        //        ViewBag.SalesmanID = new SelectList(unitOfWork.AccountRepository.Get(b => b.RoleID == 3 && b.IsActive == true), "AccountID", "Username");
 
-            }
-            return View(drugstoreGroup);
-        }
+        //    }
+        //    return View(drugstoreGroup);
+        //}
 
-        [HttpPost]
-        public ActionResult EditDrugstoreGroup(DrugstoreGroup drugStoreGroup)
-        {
-            var drugstoreGroupTemp = unitOfWork.DrugstoreGroupRepository.GetByID(drugStoreGroup.DrugstoreGroupID);
-            drugstoreGroupTemp.SalesmanID = drugStoreGroup.SalesmanID;
-            unitOfWork.DrugstoreGroupRepository.Update(drugstoreGroupTemp);
-            unitOfWork.DrugstoreGroupRepository.SaveChanges();
-            return RedirectToAction("ListDrugstoreGroup");
-            // return View(drugStore);
-        }
+        //[HttpPost]
+        //public ActionResult EditDrugstoreGroup(DrugstoreGroup drugStoreGroup)
+        //{
+        //    var drugstoreGroupTemp = unitOfWork.DrugstoreGroupRepository.GetByID(drugStoreGroup.DrugstoreGroupID);
+        //    drugstoreGroupTemp.SalesmanID = drugStoreGroup.SalesmanID;
+        //    unitOfWork.DrugstoreGroupRepository.Update(drugstoreGroupTemp);
+        //    unitOfWork.DrugstoreGroupRepository.SaveChanges();
+        //    return RedirectToAction("ListDrugstoreGroup");
+        //    // return View(drugStore);
+        //}
 
-        public ActionResult DeleteDrugstoreGroup(int id = 0)
-        {
-            var drugType = unitOfWork.DrugstoreGroupRepository.GetByID(id);
-            if (drugType == null)
-            {
-                return HttpNotFound();
-            }
-            return View(drugType);
-        }
+        //public ActionResult DeleteDrugstoreGroup(int id = 0)
+        //{
+        //    var drugType = unitOfWork.DrugstoreGroupRepository.GetByID(id);
+        //    if (drugType == null)
+        //    {
+        //        return HttpNotFound();
+        //    }
+        //    return View(drugType);
+        //}
 
-        [HttpPost, ActionName("DeleteDrugstoreGroup")]
-        public ActionResult DeleteDrugstoreGroupConfirmed(int id)
-        {
-            var drugstoreGroup = unitOfWork.DrugstoreGroupRepository.GetByID(id);
-            for (int i = 0; i < drugstoreGroup.Drugstores.Count; i++)
-            {
-                var drugstore = drugstoreGroup.Drugstores.ElementAt(i);
-                drugstore.DrugstoreGroupID = null;
-                unitOfWork.DrugStoreRepository.Update(drugstore);
-                unitOfWork.DrugStoreRepository.SaveChanges();
-            }
-            unitOfWork.DrugstoreGroupRepository.Delete(drugstoreGroup);
-            unitOfWork.DrugstoreGroupRepository.SaveChanges();
-            return RedirectToAction("ListDrugstoreGroup");
-        }
+        //[HttpPost, ActionName("DeleteDrugstoreGroup")]
+        //public ActionResult DeleteDrugstoreGroupConfirmed(int id)
+        //{
+        //    var drugstoreGroup = unitOfWork.DrugstoreGroupRepository.GetByID(id);
+        //    for (int i = 0; i < drugstoreGroup.Drugstores.Count; i++)
+        //    {
+        //        var drugstore = drugstoreGroup.Drugstores.ElementAt(i);
+        //        drugstore.DrugstoreGroupID = null;
+        //        unitOfWork.DrugStoreRepository.Update(drugstore);
+        //        unitOfWork.DrugStoreRepository.SaveChanges();
+        //    }
+        //    unitOfWork.DrugstoreGroupRepository.Delete(drugstoreGroup);
+        //    unitOfWork.DrugstoreGroupRepository.SaveChanges();
+        //    return RedirectToAction("ListDrugstoreGroup");
+        //}
 
         public ActionResult DrugstoreDetails(int id = 0)
         {
@@ -573,29 +576,29 @@ namespace DMS.Controllers
 
             ViewBag.DrugstoreTypeID = new SelectList(unitOfWork.DrugStoreTypeRepository.GetAll(), "DrugstoreTypeID", "DrugstoreTypeName", drugstore.DrugstoreTypeID);
             //ViewBag.AccountID = new SelectList(listSalesman, "AccountID", "FullName", drugstore.DrugstoreGroup.SalesmanID);
-            if (drugstore.DrugstoreGroup != null)
-            {
-                ViewBag.DrugstoreGroupID = new SelectList(unitOfWork.DrugstoreGroupRepository.GetAll(), "DrugstoreGroupID", "DrugstoreGroupID", drugstore.DrugstoreGroupID);
-            }
-            else
-            {
-                ViewBag.DrugstoreGroupID = new SelectList(unitOfWork.DrugstoreGroupRepository.GetAll(), "DrugstoreGroupID", "DrugstoreGroupID", "-Chọn nhóm-");
-            }
+            //if (drugstore.DrugstoreGroup != null)
+            //{
+            //    ViewBag.DrugstoreGroupID = new SelectList(unitOfWork.DrugstoreGroupRepository.GetAll(), "DrugstoreGroupID", "DrugstoreGroupID", drugstore.DrugstoreGroupID);
+            //}
+            //else
+            //{
+            //    ViewBag.DrugstoreGroupID = new SelectList(unitOfWork.DrugstoreGroupRepository.GetAll(), "DrugstoreGroupID", "DrugstoreGroupID", "-Chọn nhóm-");
+            //}
             ViewBag.DrugstoreID = id;
             return PartialView();
         }
 
-        [HttpPost]
-        public ActionResult ManageDrugstore(string DrugstoreID, string DrugstoreGroupID, string DrugstoreType)
-        {
-            var id = int.Parse(DrugstoreID);
-            var drugstore = unitOfWork.DrugStoreRepository.GetByID(id);
-            drugstore.DrugstoreTypeID = int.Parse(DrugstoreType);
-            drugstore.DrugstoreGroupID = int.Parse(DrugstoreGroupID);
-            unitOfWork.DrugStoreRepository.Update(drugstore);
-            unitOfWork.DrugStoreRepository.SaveChanges();
-            return Json(new { D = drugstore.DrugstoreTypeID, S = drugstore.DrugstoreGroupID }, JsonRequestBehavior.AllowGet);
-        }
+        //[HttpPost]
+        //public ActionResult ManageDrugstore(string DrugstoreID, string DrugstoreGroupID, string DrugstoreType)
+        //{
+        //    var id = int.Parse(DrugstoreID);
+        //    var drugstore = unitOfWork.DrugStoreRepository.GetByID(id);
+        //    drugstore.DrugstoreTypeID = int.Parse(DrugstoreType);
+        //    drugstore.DrugstoreGroupID = int.Parse(DrugstoreGroupID);
+        //    unitOfWork.DrugStoreRepository.Update(drugstore);
+        //    unitOfWork.DrugStoreRepository.SaveChanges();
+        //    return Json(new { D = drugstore.DrugstoreTypeID, S = drugstore.DrugstoreGroupID }, JsonRequestBehavior.AllowGet);
+        //}
 
         public ActionResult DrugstorePayment(int id)
         {
@@ -620,7 +623,10 @@ namespace DMS.Controllers
             //    }
             //}
             //totalDebt = Math.Abs(totalDebt);
-            totalDebt = float.Parse(unitOfWork.DrugStoreRepository.GetByID(DrugstoreID).Debt.ToString());
+            if (unitOfWork.DrugStoreRepository.GetByID(DrugstoreID).Debt!=null)
+            {
+                totalDebt = float.Parse(unitOfWork.DrugStoreRepository.GetByID(DrugstoreID).Debt.ToString());
+            }
             return Json(totalDebt, JsonRequestBehavior.AllowGet);
         }
 
@@ -694,11 +700,11 @@ namespace DMS.Controllers
             // return RedirectToAction("DrugstorePayment", "Staff");
         }
 
-        public ActionResult ApproveDrugstore()
-        {
-            var listDrugstore = unitOfWork.DrugStoreRepository.GetAll().Where(d => d.DrugstoreGroup.SalesmanID != null).ToList();
-            return View(listDrugstore);
-        }
+        //public ActionResult ApproveDrugstore()
+        //{
+        //    //var listDrugstore = unitOfWork.DrugStoreRepository.GetAll().Where(d => d.DrugstoreGroup.SalesmanID != null).ToList();
+        //    return View(listDrugstore);
+        //}
 
         public ActionResult ApprovedDrugstore(int id)
         {
@@ -736,15 +742,7 @@ namespace DMS.Controllers
         }
         //Xác nhận đơn hàng
 
-        public ActionResult ApproveOrder(int id)
-        {
-            var order = unitOfWork.DrugOrderRepository.GetByID(id);
-            order.Status = (int)Status.StatusEnum.Approved;
-            unitOfWork.DrugOrderRepository.Update(order);
-            unitOfWork.DrugOrderRepository.SaveChanges();
 
-            return RedirectToAction("ListOrderNotApprove", "Staff");
-        }
         //Huỷ đơn hàng
 
         public ActionResult CancelOrder(int id)
@@ -880,179 +878,240 @@ namespace DMS.Controllers
             return Json(coordinate, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult GroupDrugstoreOption()
-        {
-            var listDrugstore = unitOfWork.DrugStoreRepository.Get(b => b.DrugstoreGroup == null).ToList();
-            var listAllDrugstore = unitOfWork.DrugStoreRepository.GetAll().ToList();
-            ViewBag.ListAllDrugstore = listAllDrugstore;
-            Session["ListSalesman"] = unitOfWork.AccountRepository.Get(b => b.Role.RoleID == 3 & b.IsActive == true).ToList();
-            return View(listDrugstore);
-        }
-        [HttpPost]
-        public ActionResult StepOne(bool option, int number)
-        {
-            var allGroups = new List<Tuple<List<Drugstore>, string>>();
-            if (option)
-            {
-                allGroups = kMeans.Processing(number);
-            }
-            else
-            {
-                var listDrugstoreGroupOld = unitOfWork.DrugstoreGroupRepository.GetAll().ToList();
-                var listDrugstore = unitOfWork.DrugStoreRepository.GetAll().ToList();
-                for (int i = 0; i < listDrugstore.Count; i++)
-                {
-                    listDrugstore[i].DrugstoreGroupID = null;
-                    unitOfWork.DrugStoreRepository.Update(listDrugstore[i]);
-                    unitOfWork.DrugStoreRepository.SaveChanges();
-                }
-                for (int i = 0; i < listDrugstoreGroupOld.Count; i++)
-                {
-                    unitOfWork.DrugstoreGroupRepository.Delete(listDrugstoreGroupOld[i]);
-                    unitOfWork.DrugstoreGroupRepository.SaveChanges();
-                }
-                allGroups = kMeans.Processing(number);
-            }
-            var listDrugstoreGroup = new List<DrugstoreGroup>();
-            if (allGroups != null)
-            {
-                for (int i = 0; i < number; i++)
-                {
-                    //var index = -1;
-                    //double minDistance = double.MaxValue;
-                    //for (int j = 0; j < allGroups.Count; j++)
-                    //{
-                    //    double curDistance = DistanceFromSalesman(allGroups[j].Item2, listSalemans[i]);
-                    //    if (curDistance < minDistance)
-                    //    {
-                    //        minDistance = curDistance;
-                    //        index = j;
-                    //    }
-                    //}
-                    var drugstoreGroup = new DrugstoreGroup();
-                    //drugstoreGroup.SalesmanID = listSalemans[i].AccountID;
-                    drugstoreGroup.DrugstoreCentroid = allGroups[i].Item2;
-                    unitOfWork.DrugstoreGroupRepository.Insert(drugstoreGroup);
-                    unitOfWork.DrugstoreGroupRepository.SaveChanges();
+        //public ActionResult GroupDrugstoreOption()
+        //{
+        //    var listDrugstore = unitOfWork.DrugStoreRepository.Get(b => b.DrugstoreGroup == null).ToList();
+        //    var listAllDrugstore = unitOfWork.DrugStoreRepository.GetAll().ToList();
+        //    ViewBag.ListAllDrugstore = listAllDrugstore;
+        //    Session["ListSalesman"] = unitOfWork.AccountRepository.Get(b => b.Role.RoleID == 3 & b.IsActive == true).ToList();
+        //    return View(listDrugstore);
+        //}
+        //[HttpPost]
+        //public ActionResult StepOne(bool option, int number)
+        //{
+        //    var allGroups = new List<Tuple<List<Drugstore>, string>>();
+        //    if (option)
+        //    {
+        //        allGroups = kMeans.Processing(number);
+        //    }
+        //    else
+        //    {
+        //        var listDrugstoreGroupOld = unitOfWork.DrugstoreGroupRepository.GetAll().ToList();
+        //        var listDrugstore = unitOfWork.DrugStoreRepository.GetAll().ToList();
+        //        for (int i = 0; i < listDrugstore.Count; i++)
+        //        {
+        //            listDrugstore[i].DrugstoreGroupID = null;
+        //            unitOfWork.DrugStoreRepository.Update(listDrugstore[i]);
+        //            unitOfWork.DrugStoreRepository.SaveChanges();
+        //        }
+        //        for (int i = 0; i < listDrugstoreGroupOld.Count; i++)
+        //        {
+        //            unitOfWork.DrugstoreGroupRepository.Delete(listDrugstoreGroupOld[i]);
+        //            unitOfWork.DrugstoreGroupRepository.SaveChanges();
+        //        }
+        //        allGroups = kMeans.Processing(number);
+        //    }
+        //    var listDrugstoreGroup = new List<DrugstoreGroup>();
+        //    if (allGroups != null)
+        //    {
+        //        for (int i = 0; i < number; i++)
+        //        {
+        //            //var index = -1;
+        //            //double minDistance = double.MaxValue;
+        //            //for (int j = 0; j < allGroups.Count; j++)
+        //            //{
+        //            //    double curDistance = DistanceFromSalesman(allGroups[j].Item2, listSalemans[i]);
+        //            //    if (curDistance < minDistance)
+        //            //    {
+        //            //        minDistance = curDistance;
+        //            //        index = j;
+        //            //    }
+        //            //}
+        //            var drugstoreGroup = new DrugstoreGroup();
+        //            //drugstoreGroup.SalesmanID = listSalemans[i].AccountID;
+        //            drugstoreGroup.DrugstoreCentroid = allGroups[i].Item2;
+        //            unitOfWork.DrugstoreGroupRepository.Insert(drugstoreGroup);
+        //            unitOfWork.DrugstoreGroupRepository.SaveChanges();
 
-                    for (int k = 0; k < allGroups[i].Item1.Count; k++)
-                    {
-                        var drugstoreID = allGroups[i].Item1[k].DrugstoreID;
-                        var drugstore =
-                            unitOfWork.DrugStoreRepository.GetAll().Single(s => s.DrugstoreID == drugstoreID);
-                        drugstore.DrugstoreGroupID = drugstoreGroup.DrugstoreGroupID;
-                        unitOfWork.DrugStoreRepository.Update(drugstore);
-                        unitOfWork.DrugStoreRepository.SaveChanges();
-                    }
-                    listDrugstoreGroup.Add(drugstoreGroup);
-                    //allGroups.Remove(allGroups[i]);
-                }
+        //            for (int k = 0; k < allGroups[i].Item1.Count; k++)
+        //            {
+        //                var drugstoreID = allGroups[i].Item1[k].DrugstoreID;
+        //                var drugstore =
+        //                    unitOfWork.DrugStoreRepository.GetAll().Single(s => s.DrugstoreID == drugstoreID);
+        //                drugstore.DrugstoreGroupID = drugstoreGroup.DrugstoreGroupID;
+        //                unitOfWork.DrugStoreRepository.Update(drugstore);
+        //                unitOfWork.DrugStoreRepository.SaveChanges();
+        //            }
+        //            listDrugstoreGroup.Add(drugstoreGroup);
+        //            //allGroups.Remove(allGroups[i]);
+        //        }
 
-                Session["ListDrugstoreGroup"] = listDrugstoreGroup;
-            }
+        //        Session["ListDrugstoreGroup"] = listDrugstoreGroup;
+        //    }
 
 
-            return View();
-        }
+        //    return View();
+        //}
 
-        public ActionResult StepOne()
-        {
-            var listDrugstoreGroup = (List<DrugstoreGroup>)Session["ListDrugstoreGroup"];
-            return View(listDrugstoreGroup);
-        }
-        public ActionResult StepTwo(bool isAutomatic)
-        {
-            var listDrugstoreGroups = (List<DrugstoreGroup>)Session["ListDrugstoreGroup"];
-            var drugstoreController = new DrugstoreController();
+        //public ActionResult StepOne()
+        //{
+        //    var listDrugstoreGroup = (List<DrugstoreGroup>)Session["ListDrugstoreGroup"];
+        //    return View(listDrugstoreGroup);
+        //}
+        //public ActionResult StepTwo(bool isAutomatic)
+        //{
+        //    var listDrugstoreGroups = (List<DrugstoreGroup>)Session["ListDrugstoreGroup"];
+        //    var drugstoreController = new DrugstoreController();
 
-            if (isAutomatic)
-            {
-                var listSalesman = unitOfWork.AccountRepository.Get(b => b.Role.RoleID == 3 & b.IsActive == true).ToList();
-                Random r = new Random();
-                //foreach (int i in Enumerable.Range(0, listDrugstoreGroups.Count).OrderBy(x => r.Next()))
-                for (int i = 0; i < listDrugstoreGroups.Count; i++)
-                {
-                    var index = -1;
-                    double minDistance = double.MaxValue;
-                    if (listSalesman.Count == 0)
-                    {
-                        listSalesman = unitOfWork.AccountRepository.Get(b => b.Role.RoleID == 3 & b.IsActive == true).ToList();
-                    }
-                    for (int j = listSalesman.Count - 1; j >= 0; j--)
-                    {
-                        double curDistance = drugstoreController.DistanceFromSalesman(listDrugstoreGroups[i].DrugstoreCentroid, listSalesman[j]);
-                        if (curDistance < minDistance)
-                        {
-                            minDistance = curDistance;
-                            index = j;
-                        }
-                    }
-                    listDrugstoreGroups[i].SalesmanID = listSalesman[index].AccountID;
-                    var drugstoreGroup = unitOfWork.DrugstoreGroupRepository.GetByID(listDrugstoreGroups[i].DrugstoreGroupID);
-                    drugstoreGroup.SalesmanID = listSalesman[index].AccountID;
-                    unitOfWork.DrugstoreGroupRepository.Update(drugstoreGroup);
-                    unitOfWork.DrugstoreGroupRepository.SaveChanges();
-                    listSalesman.Remove(listSalesman[index]);
-                }
-                Session["ListDrugstoreGroup"] = listDrugstoreGroups;
-            }
-            else
-            {
-                for (int i = 0; i < listDrugstoreGroups.Count; i++)
-                {
-                    var drugstoreGroup = unitOfWork.DrugstoreGroupRepository.GetByID(listDrugstoreGroups[i].DrugstoreGroupID);
-                    drugstoreGroup.SalesmanID = listDrugstoreGroups[i].SalesmanID;
-                    unitOfWork.DrugstoreGroupRepository.Update(drugstoreGroup);
-                    unitOfWork.DrugstoreGroupRepository.SaveChanges();
-                }
-            }
-            return RedirectToAction("Result");
-        }
+        //    if (isAutomatic)
+        //    {
+        //        var listSalesman = unitOfWork.AccountRepository.Get(b => b.Role.RoleID == 3 & b.IsActive == true).ToList();
+        //        Random r = new Random();
+        //        //foreach (int i in Enumerable.Range(0, listDrugstoreGroups.Count).OrderBy(x => r.Next()))
+        //        for (int i = 0; i < listDrugstoreGroups.Count; i++)
+        //        {
+        //            var index = -1;
+        //            double minDistance = double.MaxValue;
+        //            if (listSalesman.Count == 0)
+        //            {
+        //                listSalesman = unitOfWork.AccountRepository.Get(b => b.Role.RoleID == 3 & b.IsActive == true).ToList();
+        //            }
+        //            for (int j = listSalesman.Count - 1; j >= 0; j--)
+        //            {
+        //                double curDistance = drugstoreController.DistanceFromSalesman(listDrugstoreGroups[i].DrugstoreCentroid, listSalesman[j]);
+        //                if (curDistance < minDistance)
+        //                {
+        //                    minDistance = curDistance;
+        //                    index = j;
+        //                }
+        //            }
+        //            listDrugstoreGroups[i].SalesmanID = listSalesman[index].AccountID;
+        //            var drugstoreGroup = unitOfWork.DrugstoreGroupRepository.GetByID(listDrugstoreGroups[i].DrugstoreGroupID);
+        //            drugstoreGroup.SalesmanID = listSalesman[index].AccountID;
+        //            unitOfWork.DrugstoreGroupRepository.Update(drugstoreGroup);
+        //            unitOfWork.DrugstoreGroupRepository.SaveChanges();
+        //            listSalesman.Remove(listSalesman[index]);
+        //        }
+        //        Session["ListDrugstoreGroup"] = listDrugstoreGroups;
+        //    }
+        //    else
+        //    {
+        //        for (int i = 0; i < listDrugstoreGroups.Count; i++)
+        //        {
+        //            var drugstoreGroup = unitOfWork.DrugstoreGroupRepository.GetByID(listDrugstoreGroups[i].DrugstoreGroupID);
+        //            drugstoreGroup.SalesmanID = listDrugstoreGroups[i].SalesmanID;
+        //            unitOfWork.DrugstoreGroupRepository.Update(drugstoreGroup);
+        //            unitOfWork.DrugstoreGroupRepository.SaveChanges();
+        //        }
+        //    }
+        //    return RedirectToAction("Result");
+        //}
 
         public ActionResult Result()
         {
             return View();
         }
-        public ActionResult UpdateGroup(int drugstoreGroupID, int salesmanID)
-        {
-            var listDrugstoreGroups = (List<DrugstoreGroup>)Session["ListDrugstoreGroup"];
-            var listSalesman = (List<Account>)Session["ListSalesman"];
-            for (int i = 0; i < listDrugstoreGroups.Count; i++)
-            {
-                if (listDrugstoreGroups[i].DrugstoreGroupID == drugstoreGroupID)
-                {
-                    listDrugstoreGroups[i].SalesmanID = salesmanID;
-                    break;
-                }
-            }
-            Session["ListDrugstoreGroup"] = listDrugstoreGroups;
-            return null;
-        }
-        public ActionResult AssignForSaleman()
-        {
-            var listDrugstoreGroup = unitOfWork.DrugstoreGroupRepository.Get(b => b.SalesmanID == null);
-            Session["ListDrugstoreGroup"] = listDrugstoreGroup;
-            Session["ListSalesman"] = unitOfWork.AccountRepository.Get(b => b.Role.RoleID == 3 & b.IsActive == true).ToList();
-            return View();
-        }
+        //public ActionResult UpdateGroup(int drugstoreGroupID, int salesmanID)
+        //{
+        //    var listDrugstoreGroups = (List<DrugstoreGroup>)Session["ListDrugstoreGroup"];
+        //    var listSalesman = (List<Account>)Session["ListSalesman"];
+        //    for (int i = 0; i < listDrugstoreGroups.Count; i++)
+        //    {
+        //        if (listDrugstoreGroups[i].DrugstoreGroupID == drugstoreGroupID)
+        //        {
+        //            listDrugstoreGroups[i].SalesmanID = salesmanID;
+        //            break;
+        //        }
+        //    }
+        //    Session["ListDrugstoreGroup"] = listDrugstoreGroups;
+        //    return null;
+        //}
+        //public ActionResult AssignForSaleman()
+        //{
+        //    //var listDrugstoreGroup = unitOfWork.DrugstoreGroupRepository.Get(b => b.SalesmanID == null);
+        //    Session["ListDrugstoreGroup"] = listDrugstoreGroup;
+        //    Session["ListSalesman"] = unitOfWork.AccountRepository.Get(b => b.Role.RoleID == 3 & b.IsActive == true).ToList();
+        //    return View();
+        //}
 
-        public ActionResult ListDistrict()
+        public ActionResult ListDistrict(int cityID = 1)
         {
             var listSalesman = unitOfWork.AccountRepository.Get(b => b.RoleID == 3).ToList();
             //ViewBag.Salesman = new SelectList(list, "AccountID",
             //    "Email","----Chọn----");
             ViewBag.Salesman = listSalesman;
-            var listDistrict = unitOfWork.DistrictRepository.GetAll();
+            var listCity = unitOfWork.CityRepository.GetAll();
+            //ViewBag.Salesman = new SelectList(list, "AccountID",
+            //    "Email","----Chọn----");
+            ViewBag.City = listCity;
+            ViewBag.CityID = cityID;
+            var listDistrict = unitOfWork.DistrictRepository.Get(b => b.CityID == cityID).ToList();
             return View(listDistrict);
         }
 
-        public ActionResult AssignSaleman(int districtID,int salesmanID)
+        public ActionResult AssignSaleman(int districtID, int salesmanID, int cityID)
         {
             var district = unitOfWork.DistrictRepository.GetByID(districtID);
             district.SalesmanID = salesmanID;
             unitOfWork.DistrictRepository.Update(district);
             unitOfWork.DistrictRepository.SaveChanges();
-            return RedirectToAction("ListDistrict");
+            return RedirectToAction("ListDistrict", new { cityID = cityID });
         }
+
+        public ActionResult ReviewOrder(int orderID)
+        {
+            var drugsOrder = unitOfWork.DrugOrderRepository.GetByID(orderID);
+            Session["DrugsOrderDetails"] = drugsOrder.DrugOrderDetails.ToList();
+            return View(drugsOrder);
+        }
+
+        public JsonResult UpdateDeliveryQuantity(int drugorderDetailsID, int deliveryQuantity)
+        {
+            var result = false;
+            if (Session["DrugsOrderDetails"] != null)
+            {
+                var drugsOrderDetails = (List<DrugOrderDetail>)Session["DrugsOrderDetails"];
+                drugsOrderDetails.Single(b => b.DrugOrderDetailsID == drugorderDetailsID).DeliveryQuantity = deliveryQuantity;
+                result = true;
+                Session["DrugsOrderDetails"] = drugsOrderDetails;
+            }
+            return Json(result);
+        }
+        public JsonResult UpdateNote(int drugorderDetailsID,  string note)
+        {
+            if (Session["DrugsOrderDetails"] != null)
+            {
+                var drugsOrderDetails = (List<DrugOrderDetail>)Session["DrugsOrderDetails"];
+                drugsOrderDetails.Single(b => b.DrugOrderDetailsID == drugorderDetailsID).Note = note;
+                Session["DrugsOrderDetails"] = drugsOrderDetails;
+            }
+            return new JsonResult();
+        }
+        public ActionResult ApproveOrder(int id)
+        {
+            var order = unitOfWork.DrugOrderRepository.GetByID(id);
+            order.Status = (int)Status.StatusEnum.Approved;
+            var listOrderDeitals = order.DrugOrderDetails.ToList();
+            double? totalPrice = 0;
+            if (Session["DrugsOrderDetails"] != null)
+            {
+                var drugsOrderDetails = (List<DrugOrderDetail>)Session["DrugsOrderDetails"];
+                for (int i = 0; i < listOrderDeitals.Count; i++)
+                {
+                    var temp =drugsOrderDetails.Single(b => b.DrugOrderDetailsID == listOrderDeitals[i].DrugOrderDetailsID);
+                    listOrderDeitals[i].DeliveryQuantity =temp.DeliveryQuantity;
+                    listOrderDeitals[i].Note = temp.Note;
+                    unitOfWork.DrugOrderDetailRepository.Update(listOrderDeitals[i]);
+                    totalPrice =totalPrice+ listOrderDeitals[i].DeliveryQuantity*listOrderDeitals[i].UnitPrice;
+                }
+                Session["DrugsOrderDetails"] = null;
+            }
+            order.TotalPrice = totalPrice.Value;
+            unitOfWork.DrugOrderRepository.Update(order);
+            unitOfWork.DrugOrderRepository.SaveChanges();
+            return RedirectToAction("ListOrderNotApprove", "Staff");
+        }
+
+        
     }
 }

@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="DMSModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="DMSModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Account">
           <Key>
             <PropertyRef Name="AccountID" />
@@ -26,6 +26,13 @@
           <Property Name="Phone" Type="nvarchar" MaxLength="50" />
           <Property Name="Address" Type="nvarchar" MaxLength="250" />
           <Property Name="Coordinate" Type="nvarchar" MaxLength="150" />
+        </EntityType>
+        <EntityType Name="City">
+          <Key>
+            <PropertyRef Name="CityID" />
+          </Key>
+          <Property Name="CityID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CityName" Type="nvarchar" MaxLength="150" Nullable="false" />
         </EntityType>
         <EntityType Name="DeliveryMan">
           <Key>
@@ -54,6 +61,7 @@
           <Property Name="DeliveryScheduleDetailsID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="DeliveryScheduleID" Type="int" Nullable="false" />
           <Property Name="DrugOrderID" Type="int" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="DiscountRate">
           <Key>
@@ -71,6 +79,7 @@
           <Property Name="DistrictID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="DistrictName" Type="nvarchar" MaxLength="250" Nullable="false" />
           <Property Name="SalesmanID" Type="int" />
+          <Property Name="CityID" Type="int" />
         </EntityType>
         <EntityType Name="Drug">
           <Key>
@@ -115,6 +124,8 @@
           <Property Name="UnitID" Type="int" Nullable="false" />
           <Property Name="Quantity" Type="int" Nullable="false" />
           <Property Name="UnitPrice" Type="float" />
+          <Property Name="DeliveryQuantity" Type="int" />
+          <Property Name="Note" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="Drugstore">
           <Key>
@@ -125,20 +136,10 @@
           <Property Name="Address" Type="nvarchar" MaxLength="250" />
           <Property Name="Coordinate" Type="nvarchar" MaxLength="150" Nullable="false" />
           <Property Name="OwnerID" Type="int" />
-          <Property Name="DrugstoreGroupID" Type="int" />
-          <Property Name="ApprovedByStaffID" Type="int" />
           <Property Name="DrugstoreTypeID" Type="int" />
           <Property Name="IsActive" Type="bit" />
           <Property Name="Debt" Type="float" />
           <Property Name="DistrictID" Type="int" />
-        </EntityType>
-        <EntityType Name="DrugstoreGroup">
-          <Key>
-            <PropertyRef Name="DrugstoreGroupID" />
-          </Key>
-          <Property Name="DrugstoreGroupID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="SalesmanID" Type="int" />
-          <Property Name="DrugstoreCentroid" Type="nvarchar" MaxLength="150" />
         </EntityType>
         <EntityType Name="DrugstoreType">
           <Key>
@@ -166,6 +167,8 @@
           <Property Name="Balance" Type="float" />
           <Property Name="Date" Type="datetime" Nullable="false" />
           <Property Name="IsActive" Type="bit" />
+          <Property Name="FullName" Type="nvarchar" MaxLength="150" />
+          <Property Name="PhoneNumber" Type="nchar" MaxLength="13" />
         </EntityType>
         <EntityType Name="Price">
           <Key>
@@ -308,6 +311,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_District_City">
+          <End Role="City" Type="Self.City" Multiplicity="0..1" />
+          <End Role="District" Type="Self.District" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="City">
+              <PropertyRef Name="CityID" />
+            </Principal>
+            <Dependent Role="District">
+              <PropertyRef Name="CityID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Drug_DrugCompany">
           <End Role="DrugCompany" Type="Self.DrugCompany" Multiplicity="0..1" />
           <End Role="Drug" Type="Self.Drug" Multiplicity="*" />
@@ -392,18 +407,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Drugstore_Account1">
-          <End Role="Account" Type="Self.Account" Multiplicity="0..1" />
-          <End Role="Drugstore" Type="Self.Drugstore" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Account">
-              <PropertyRef Name="AccountID" />
-            </Principal>
-            <Dependent Role="Drugstore">
-              <PropertyRef Name="ApprovedByStaffID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Drugstore_District">
           <End Role="District" Type="Self.District" Multiplicity="0..1" />
           <End Role="Drugstore" Type="Self.Drugstore" Multiplicity="*" />
@@ -416,18 +419,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Drugstore_DrugstoreGroup">
-          <End Role="DrugstoreGroup" Type="Self.DrugstoreGroup" Multiplicity="0..1" />
-          <End Role="Drugstore" Type="Self.Drugstore" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="DrugstoreGroup">
-              <PropertyRef Name="DrugstoreGroupID" />
-            </Principal>
-            <Dependent Role="Drugstore">
-              <PropertyRef Name="DrugstoreGroupID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Drugstore_DrugstoreType">
           <End Role="DrugstoreType" Type="Self.DrugstoreType" Multiplicity="0..1" />
           <End Role="Drugstore" Type="Self.Drugstore" Multiplicity="*" />
@@ -437,18 +428,6 @@
             </Principal>
             <Dependent Role="Drugstore">
               <PropertyRef Name="DrugstoreTypeID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_DrugstoreGroup_Account">
-          <End Role="Account" Type="Self.Account" Multiplicity="0..1" />
-          <End Role="DrugstoreGroup" Type="Self.DrugstoreGroup" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Account">
-              <PropertyRef Name="AccountID" />
-            </Principal>
-            <Dependent Role="DrugstoreGroup">
-              <PropertyRef Name="SalesmanID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -479,6 +458,7 @@
         <EntityContainer Name="DMSModelStoreContainer">
           <EntitySet Name="Account" EntityType="Self.Account" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AccountProfile" EntityType="Self.AccountProfile" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="City" EntityType="Self.City" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DeliveryMan" EntityType="Self.DeliveryMan" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DeliverySchedule" EntityType="Self.DeliverySchedule" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DeliveryScheduleDetails" EntityType="Self.DeliveryScheduleDetails" Schema="dbo" store:Type="Tables" />
@@ -489,7 +469,6 @@
           <EntitySet Name="DrugOrder" EntityType="Self.DrugOrder" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DrugOrderDetails" EntityType="Self.DrugOrderDetails" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Drugstore" EntityType="Self.Drugstore" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="DrugstoreGroup" EntityType="Self.DrugstoreGroup" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DrugstoreType" EntityType="Self.DrugstoreType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DrugType" EntityType="Self.DrugType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Payment" EntityType="Self.Payment" Schema="dbo" store:Type="Tables" />
@@ -533,6 +512,10 @@
             <End Role="Account" EntitySet="Account" />
             <End Role="District" EntitySet="District" />
           </AssociationSet>
+          <AssociationSet Name="FK_District_City" Association="Self.FK_District_City">
+            <End Role="City" EntitySet="City" />
+            <End Role="District" EntitySet="District" />
+          </AssociationSet>
           <AssociationSet Name="FK_Drug_DrugCompany" Association="Self.FK_Drug_DrugCompany">
             <End Role="DrugCompany" EntitySet="DrugCompany" />
             <End Role="Drug" EntitySet="Drug" />
@@ -561,25 +544,13 @@
             <End Role="Account" EntitySet="Account" />
             <End Role="Drugstore" EntitySet="Drugstore" />
           </AssociationSet>
-          <AssociationSet Name="FK_Drugstore_Account1" Association="Self.FK_Drugstore_Account1">
-            <End Role="Account" EntitySet="Account" />
-            <End Role="Drugstore" EntitySet="Drugstore" />
-          </AssociationSet>
           <AssociationSet Name="FK_Drugstore_District" Association="Self.FK_Drugstore_District">
             <End Role="District" EntitySet="District" />
-            <End Role="Drugstore" EntitySet="Drugstore" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Drugstore_DrugstoreGroup" Association="Self.FK_Drugstore_DrugstoreGroup">
-            <End Role="DrugstoreGroup" EntitySet="DrugstoreGroup" />
             <End Role="Drugstore" EntitySet="Drugstore" />
           </AssociationSet>
           <AssociationSet Name="FK_Drugstore_DrugstoreType" Association="Self.FK_Drugstore_DrugstoreType">
             <End Role="DrugstoreType" EntitySet="DrugstoreType" />
             <End Role="Drugstore" EntitySet="Drugstore" />
-          </AssociationSet>
-          <AssociationSet Name="FK_DrugstoreGroup_Account" Association="Self.FK_DrugstoreGroup_Account">
-            <End Role="Account" EntitySet="Account" />
-            <End Role="DrugstoreGroup" EntitySet="DrugstoreGroup" />
           </AssociationSet>
           <AssociationSet Name="FK_Price_Drug" Association="Self.FK_Price_Drug">
             <End Role="Drug" EntitySet="Drug" />
@@ -590,11 +561,116 @@
             <End Role="Price" EntitySet="Price" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="DMSModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="DMPEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Accounts" EntityType="DMSModel.Account" />
+          <EntitySet Name="AccountProfiles" EntityType="DMSModel.AccountProfile" />
+          <EntitySet Name="Cities" EntityType="DMSModel.City" />
+          <EntitySet Name="DeliveryMen" EntityType="DMSModel.DeliveryMan" />
+          <EntitySet Name="DeliverySchedules" EntityType="DMSModel.DeliverySchedule" />
+          <EntitySet Name="DeliveryScheduleDetails" EntityType="DMSModel.DeliveryScheduleDetail" />
+          <EntitySet Name="DiscountRates" EntityType="DMSModel.DiscountRate" />
+          <EntitySet Name="Districts" EntityType="DMSModel.District" />
+          <EntitySet Name="Drugs" EntityType="DMSModel.Drug" />
+          <EntitySet Name="DrugCompanies" EntityType="DMSModel.DrugCompany" />
+          <EntitySet Name="DrugOrders" EntityType="DMSModel.DrugOrder" />
+          <EntitySet Name="DrugOrderDetails" EntityType="DMSModel.DrugOrderDetail" />
+          <EntitySet Name="Drugstores" EntityType="DMSModel.Drugstore" />
+          <EntitySet Name="DrugstoreTypes" EntityType="DMSModel.DrugstoreType" />
+          <EntitySet Name="DrugTypes" EntityType="DMSModel.DrugType" />
+          <EntitySet Name="Payments" EntityType="DMSModel.Payment" />
+          <EntitySet Name="Prices" EntityType="DMSModel.Price" />
+          <EntitySet Name="Roles" EntityType="DMSModel.Role" />
+          <EntitySet Name="sysdiagrams" EntityType="DMSModel.sysdiagram" />
+          <EntitySet Name="Units" EntityType="DMSModel.Unit" />
+          <AssociationSet Name="FK_Account_AccountProfile" Association="DMSModel.FK_Account_AccountProfile">
+            <End Role="AccountProfile" EntitySet="AccountProfiles" />
+            <End Role="Account" EntitySet="Accounts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Account_Role" Association="DMSModel.FK_Account_Role">
+            <End Role="Role" EntitySet="Roles" />
+            <End Role="Account" EntitySet="Accounts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_District_Account" Association="DMSModel.FK_District_Account">
+            <End Role="Account" EntitySet="Accounts" />
+            <End Role="District" EntitySet="Districts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Drugstore_Account" Association="DMSModel.FK_Drugstore_Account">
+            <End Role="Account" EntitySet="Accounts" />
+            <End Role="Drugstore" EntitySet="Drugstores" />
+          </AssociationSet>
+          <AssociationSet Name="FK_District_City" Association="DMSModel.FK_District_City">
+            <End Role="City" EntitySet="Cities" />
+            <End Role="District" EntitySet="Districts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DeliverySchedule_DeliveryMan" Association="DMSModel.FK_DeliverySchedule_DeliveryMan">
+            <End Role="DeliveryMan" EntitySet="DeliveryMen" />
+            <End Role="DeliverySchedule" EntitySet="DeliverySchedules" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DeliveryScheduleDetails_DeliverySchedule" Association="DMSModel.FK_DeliveryScheduleDetails_DeliverySchedule">
+            <End Role="DeliverySchedule" EntitySet="DeliverySchedules" />
+            <End Role="DeliveryScheduleDetail" EntitySet="DeliveryScheduleDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DeliveryScheduleDetails_DrugOrder" Association="DMSModel.FK_DeliveryScheduleDetails_DrugOrder">
+            <End Role="DrugOrder" EntitySet="DrugOrders" />
+            <End Role="DeliveryScheduleDetail" EntitySet="DeliveryScheduleDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DiscountRate_Drug" Association="DMSModel.FK_DiscountRate_Drug">
+            <End Role="Drug" EntitySet="Drugs" />
+            <End Role="DiscountRate" EntitySet="DiscountRates" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DiscountRate_DrugstoreType" Association="DMSModel.FK_DiscountRate_DrugstoreType">
+            <End Role="DrugstoreType" EntitySet="DrugstoreTypes" />
+            <End Role="DiscountRate" EntitySet="DiscountRates" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Drugstore_District" Association="DMSModel.FK_Drugstore_District">
+            <End Role="District" EntitySet="Districts" />
+            <End Role="Drugstore" EntitySet="Drugstores" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Drug_DrugCompany" Association="DMSModel.FK_Drug_DrugCompany">
+            <End Role="DrugCompany" EntitySet="DrugCompanies" />
+            <End Role="Drug" EntitySet="Drugs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Drug_DrugType" Association="DMSModel.FK_Drug_DrugType">
+            <End Role="DrugType" EntitySet="DrugTypes" />
+            <End Role="Drug" EntitySet="Drugs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DrugOrderDetails_Drug" Association="DMSModel.FK_DrugOrderDetails_Drug">
+            <End Role="Drug" EntitySet="Drugs" />
+            <End Role="DrugOrderDetail" EntitySet="DrugOrderDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Price_Drug" Association="DMSModel.FK_Price_Drug">
+            <End Role="Drug" EntitySet="Drugs" />
+            <End Role="Price" EntitySet="Prices" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DrugOrder_Drugstore" Association="DMSModel.FK_DrugOrder_Drugstore">
+            <End Role="Drugstore" EntitySet="Drugstores" />
+            <End Role="DrugOrder" EntitySet="DrugOrders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DrugOrderDetails_DrugOrder" Association="DMSModel.FK_DrugOrderDetails_DrugOrder">
+            <End Role="DrugOrder" EntitySet="DrugOrders" />
+            <End Role="DrugOrderDetail" EntitySet="DrugOrderDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DrugOrderDetails_Unit" Association="DMSModel.FK_DrugOrderDetails_Unit">
+            <End Role="Unit" EntitySet="Units" />
+            <End Role="DrugOrderDetail" EntitySet="DrugOrderDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Debt_Drugstore" Association="DMSModel.FK_Debt_Drugstore">
+            <End Role="Drugstore" EntitySet="Drugstores" />
+            <End Role="Payment" EntitySet="Payments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Drugstore_DrugstoreType" Association="DMSModel.FK_Drugstore_DrugstoreType">
+            <End Role="DrugstoreType" EntitySet="DrugstoreTypes" />
+            <End Role="Drugstore" EntitySet="Drugstores" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Price_Unit" Association="DMSModel.FK_Price_Unit">
+            <End Role="Unit" EntitySet="Units" />
+            <End Role="Price" EntitySet="Prices" />
+          </AssociationSet>
+        </EntityContainer>
         <EntityType Name="Account">
           <Key>
             <PropertyRef Name="AccountID" />
@@ -602,16 +678,14 @@
           <Property Name="AccountID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="RoleID" Type="Int32" Nullable="false" />
           <Property Name="ProfileID" Type="Int32" Nullable="false" />
-          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Email" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="IsPending" Type="Boolean" />
           <Property Name="IsActive" Type="Boolean" />
-          <NavigationProperty Name="AccountProfile" Relationship="Self.FK_Account_AccountProfile" FromRole="Account" ToRole="AccountProfile" />
-          <NavigationProperty Name="Role" Relationship="Self.FK_Account_Role" FromRole="Account" ToRole="Role" />
-          <NavigationProperty Name="Districts" Relationship="Self.FK_District_Account" FromRole="Account" ToRole="District" />
-          <NavigationProperty Name="Drugstores" Relationship="Self.FK_Drugstore_Account" FromRole="Account" ToRole="Drugstore" />
-          <NavigationProperty Name="Drugstores1" Relationship="Self.FK_Drugstore_Account1" FromRole="Account" ToRole="Drugstore" />
-          <NavigationProperty Name="DrugstoreGroups" Relationship="Self.FK_DrugstoreGroup_Account" FromRole="Account" ToRole="DrugstoreGroup" />
+          <NavigationProperty Name="AccountProfile" Relationship="DMSModel.FK_Account_AccountProfile" FromRole="Account" ToRole="AccountProfile" />
+          <NavigationProperty Name="Role" Relationship="DMSModel.FK_Account_Role" FromRole="Account" ToRole="Role" />
+          <NavigationProperty Name="Districts" Relationship="DMSModel.FK_District_Account" FromRole="Account" ToRole="District" />
+          <NavigationProperty Name="Drugstores" Relationship="DMSModel.FK_Drugstore_Account" FromRole="Account" ToRole="Drugstore" />
         </EntityType>
         <EntityType Name="AccountProfile">
           <Key>
@@ -622,7 +696,15 @@
           <Property Name="Phone" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Address" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
           <Property Name="Coordinate" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Accounts" Relationship="Self.FK_Account_AccountProfile" FromRole="AccountProfile" ToRole="Account" />
+          <NavigationProperty Name="Accounts" Relationship="DMSModel.FK_Account_AccountProfile" FromRole="AccountProfile" ToRole="Account" />
+        </EntityType>
+        <EntityType Name="City">
+          <Key>
+            <PropertyRef Name="CityID" />
+          </Key>
+          <Property Name="CityID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CityName" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Districts" Relationship="DMSModel.FK_District_City" FromRole="City" ToRole="District" />
         </EntityType>
         <EntityType Name="DeliveryMan">
           <Key>
@@ -633,7 +715,7 @@
           <Property Name="Address" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
           <Property Name="Phone" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="DeliverySchedules" Relationship="Self.FK_DeliverySchedule_DeliveryMan" FromRole="DeliveryMan" ToRole="DeliverySchedule" />
+          <NavigationProperty Name="DeliverySchedules" Relationship="DMSModel.FK_DeliverySchedule_DeliveryMan" FromRole="DeliveryMan" ToRole="DeliverySchedule" />
         </EntityType>
         <EntityType Name="DeliverySchedule">
           <Key>
@@ -644,8 +726,8 @@
           <Property Name="DueDate" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="DeliveryManID" Type="Int32" Nullable="false" />
           <Property Name="Status" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="DeliveryMan" Relationship="Self.FK_DeliverySchedule_DeliveryMan" FromRole="DeliverySchedule" ToRole="DeliveryMan" />
-          <NavigationProperty Name="DeliveryScheduleDetails" Relationship="Self.FK_DeliveryScheduleDetails_DeliverySchedule" FromRole="DeliverySchedule" ToRole="DeliveryScheduleDetails" />
+          <NavigationProperty Name="DeliveryMan" Relationship="DMSModel.FK_DeliverySchedule_DeliveryMan" FromRole="DeliverySchedule" ToRole="DeliveryMan" />
+          <NavigationProperty Name="DeliveryScheduleDetails" Relationship="DMSModel.FK_DeliveryScheduleDetails_DeliverySchedule" FromRole="DeliverySchedule" ToRole="DeliveryScheduleDetail" />
         </EntityType>
         <EntityType Name="DeliveryScheduleDetail">
           <Key>
@@ -654,8 +736,9 @@
           <Property Name="DeliveryScheduleDetailsID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="DeliveryScheduleID" Type="Int32" Nullable="false" />
           <Property Name="DrugOrderID" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="DeliverySchedule" Relationship="Self.FK_DeliveryScheduleDetails_DeliverySchedule" FromRole="DeliveryScheduleDetails" ToRole="DeliverySchedule" />
-          <NavigationProperty Name="DrugOrder" Relationship="Self.FK_DeliveryScheduleDetails_DrugOrder" FromRole="DeliveryScheduleDetails" ToRole="DrugOrder" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="DeliverySchedule" Relationship="DMSModel.FK_DeliveryScheduleDetails_DeliverySchedule" FromRole="DeliveryScheduleDetail" ToRole="DeliverySchedule" />
+          <NavigationProperty Name="DrugOrder" Relationship="DMSModel.FK_DeliveryScheduleDetails_DrugOrder" FromRole="DeliveryScheduleDetail" ToRole="DrugOrder" />
         </EntityType>
         <EntityType Name="DiscountRate">
           <Key>
@@ -665,18 +748,20 @@
           <Property Name="DrugstoreTypeID" Type="Int32" Nullable="false" />
           <Property Name="DrugID" Type="Int32" Nullable="false" />
           <Property Name="Discount" Type="Double" Nullable="false" />
-          <NavigationProperty Name="Drug" Relationship="Self.FK_DiscountRate_Drug" FromRole="DiscountRate" ToRole="Drug" />
-          <NavigationProperty Name="DrugstoreType" Relationship="Self.FK_DiscountRate_DrugstoreType" FromRole="DiscountRate" ToRole="DrugstoreType" />
+          <NavigationProperty Name="Drug" Relationship="DMSModel.FK_DiscountRate_Drug" FromRole="DiscountRate" ToRole="Drug" />
+          <NavigationProperty Name="DrugstoreType" Relationship="DMSModel.FK_DiscountRate_DrugstoreType" FromRole="DiscountRate" ToRole="DrugstoreType" />
         </EntityType>
         <EntityType Name="District">
           <Key>
             <PropertyRef Name="DistrictID" />
           </Key>
           <Property Name="DistrictID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="DistrictName" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="DistrictName" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
           <Property Name="SalesmanID" Type="Int32" />
-          <NavigationProperty Name="Account" Relationship="Self.FK_District_Account" FromRole="District" ToRole="Account" />
-          <NavigationProperty Name="Drugstores" Relationship="Self.FK_Drugstore_District" FromRole="District" ToRole="Drugstore" />
+          <Property Name="CityID" Type="Int32" />
+          <NavigationProperty Name="Account" Relationship="DMSModel.FK_District_Account" FromRole="District" ToRole="Account" />
+          <NavigationProperty Name="City" Relationship="DMSModel.FK_District_City" FromRole="District" ToRole="City" />
+          <NavigationProperty Name="Drugstores" Relationship="DMSModel.FK_Drugstore_District" FromRole="District" ToRole="Drugstore" />
         </EntityType>
         <EntityType Name="Drug">
           <Key>
@@ -685,25 +770,25 @@
           <Property Name="DrugID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="DrugCompanyID" Type="Int32" />
           <Property Name="DrugTypeID" Type="Int32" />
-          <Property Name="DrugName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="DrugName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="MiniDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="ImageUrl" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="IsActive" Type="Boolean" />
-          <NavigationProperty Name="DiscountRates" Relationship="Self.FK_DiscountRate_Drug" FromRole="Drug" ToRole="DiscountRate" />
-          <NavigationProperty Name="DrugCompany" Relationship="Self.FK_Drug_DrugCompany" FromRole="Drug" ToRole="DrugCompany" />
-          <NavigationProperty Name="DrugType" Relationship="Self.FK_Drug_DrugType" FromRole="Drug" ToRole="DrugType" />
-          <NavigationProperty Name="DrugOrderDetails" Relationship="Self.FK_DrugOrderDetails_Drug" FromRole="Drug" ToRole="DrugOrderDetails" />
-          <NavigationProperty Name="Prices" Relationship="Self.FK_Price_Drug" FromRole="Drug" ToRole="Price" />
+          <NavigationProperty Name="DiscountRates" Relationship="DMSModel.FK_DiscountRate_Drug" FromRole="Drug" ToRole="DiscountRate" />
+          <NavigationProperty Name="DrugCompany" Relationship="DMSModel.FK_Drug_DrugCompany" FromRole="Drug" ToRole="DrugCompany" />
+          <NavigationProperty Name="DrugType" Relationship="DMSModel.FK_Drug_DrugType" FromRole="Drug" ToRole="DrugType" />
+          <NavigationProperty Name="DrugOrderDetails" Relationship="DMSModel.FK_DrugOrderDetails_Drug" FromRole="Drug" ToRole="DrugOrderDetail" />
+          <NavigationProperty Name="Prices" Relationship="DMSModel.FK_Price_Drug" FromRole="Drug" ToRole="Price" />
         </EntityType>
         <EntityType Name="DrugCompany">
           <Key>
             <PropertyRef Name="DrugCompanyID" />
           </Key>
           <Property Name="DrugCompanyID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="DrugCompanyName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="DrugCompanyName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="IsActive" Type="Boolean" />
-          <NavigationProperty Name="Drugs" Relationship="Self.FK_Drug_DrugCompany" FromRole="DrugCompany" ToRole="Drug" />
+          <NavigationProperty Name="Drugs" Relationship="DMSModel.FK_Drug_DrugCompany" FromRole="DrugCompany" ToRole="Drug" />
         </EntityType>
         <EntityType Name="DrugOrder">
           <Key>
@@ -716,9 +801,9 @@
           <Property Name="DateOrder" Type="DateTime" Precision="3" />
           <Property Name="IsActive" Type="Boolean" />
           <Property Name="Status" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="DeliveryScheduleDetails" Relationship="Self.FK_DeliveryScheduleDetails_DrugOrder" FromRole="DrugOrder" ToRole="DeliveryScheduleDetails" />
-          <NavigationProperty Name="Drugstore" Relationship="Self.FK_DrugOrder_Drugstore" FromRole="DrugOrder" ToRole="Drugstore" />
-          <NavigationProperty Name="DrugOrderDetails" Relationship="Self.FK_DrugOrderDetails_DrugOrder" FromRole="DrugOrder" ToRole="DrugOrderDetails" />
+          <NavigationProperty Name="DeliveryScheduleDetails" Relationship="DMSModel.FK_DeliveryScheduleDetails_DrugOrder" FromRole="DrugOrder" ToRole="DeliveryScheduleDetail" />
+          <NavigationProperty Name="Drugstore" Relationship="DMSModel.FK_DrugOrder_Drugstore" FromRole="DrugOrder" ToRole="Drugstore" />
+          <NavigationProperty Name="DrugOrderDetails" Relationship="DMSModel.FK_DrugOrderDetails_DrugOrder" FromRole="DrugOrder" ToRole="DrugOrderDetail" />
         </EntityType>
         <EntityType Name="DrugOrderDetail">
           <Key>
@@ -730,51 +815,39 @@
           <Property Name="UnitID" Type="Int32" Nullable="false" />
           <Property Name="Quantity" Type="Int32" Nullable="false" />
           <Property Name="UnitPrice" Type="Double" />
-          <NavigationProperty Name="Drug" Relationship="Self.FK_DrugOrderDetails_Drug" FromRole="DrugOrderDetails" ToRole="Drug" />
-          <NavigationProperty Name="DrugOrder" Relationship="Self.FK_DrugOrderDetails_DrugOrder" FromRole="DrugOrderDetails" ToRole="DrugOrder" />
-          <NavigationProperty Name="Unit" Relationship="Self.FK_DrugOrderDetails_Unit" FromRole="DrugOrderDetails" ToRole="Unit" />
+          <Property Name="DeliveryQuantity" Type="Int32" />
+          <Property Name="Note" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Drug" Relationship="DMSModel.FK_DrugOrderDetails_Drug" FromRole="DrugOrderDetail" ToRole="Drug" />
+          <NavigationProperty Name="DrugOrder" Relationship="DMSModel.FK_DrugOrderDetails_DrugOrder" FromRole="DrugOrderDetail" ToRole="DrugOrder" />
+          <NavigationProperty Name="Unit" Relationship="DMSModel.FK_DrugOrderDetails_Unit" FromRole="DrugOrderDetail" ToRole="Unit" />
         </EntityType>
         <EntityType Name="Drugstore">
           <Key>
             <PropertyRef Name="DrugstoreID" />
           </Key>
           <Property Name="DrugstoreID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="DrugstoreName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="DrugstoreName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="Address" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
-          <Property Name="Coordinate" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Coordinate" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
           <Property Name="OwnerID" Type="Int32" />
-          <Property Name="DrugstoreGroupID" Type="Int32" />
-          <Property Name="ApprovedByStaffID" Type="Int32" />
           <Property Name="DrugstoreTypeID" Type="Int32" />
           <Property Name="IsActive" Type="Boolean" />
           <Property Name="Debt" Type="Double" />
           <Property Name="DistrictID" Type="Int32" />
-          <NavigationProperty Name="Account" Relationship="Self.FK_Drugstore_Account" FromRole="Drugstore" ToRole="Account" />
-          <NavigationProperty Name="Account1" Relationship="Self.FK_Drugstore_Account1" FromRole="Drugstore" ToRole="Account" />
-          <NavigationProperty Name="District" Relationship="Self.FK_Drugstore_District" FromRole="Drugstore" ToRole="District" />
-          <NavigationProperty Name="DrugOrders" Relationship="Self.FK_DrugOrder_Drugstore" FromRole="Drugstore" ToRole="DrugOrder" />
-          <NavigationProperty Name="Payments" Relationship="Self.FK_Debt_Drugstore" FromRole="Drugstore" ToRole="Payment" />
-          <NavigationProperty Name="DrugstoreGroup" Relationship="Self.FK_Drugstore_DrugstoreGroup" FromRole="Drugstore" ToRole="DrugstoreGroup" />
-          <NavigationProperty Name="DrugstoreType" Relationship="Self.FK_Drugstore_DrugstoreType" FromRole="Drugstore" ToRole="DrugstoreType" />
-        </EntityType>
-        <EntityType Name="DrugstoreGroup">
-          <Key>
-            <PropertyRef Name="DrugstoreGroupID" />
-          </Key>
-          <Property Name="DrugstoreGroupID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="SalesmanID" Type="Int32" />
-          <Property Name="DrugstoreCentroid" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Account" Relationship="Self.FK_DrugstoreGroup_Account" FromRole="DrugstoreGroup" ToRole="Account" />
-          <NavigationProperty Name="Drugstores" Relationship="Self.FK_Drugstore_DrugstoreGroup" FromRole="DrugstoreGroup" ToRole="Drugstore" />
+          <NavigationProperty Name="Account" Relationship="DMSModel.FK_Drugstore_Account" FromRole="Drugstore" ToRole="Account" />
+          <NavigationProperty Name="District" Relationship="DMSModel.FK_Drugstore_District" FromRole="Drugstore" ToRole="District" />
+          <NavigationProperty Name="DrugOrders" Relationship="DMSModel.FK_DrugOrder_Drugstore" FromRole="Drugstore" ToRole="DrugOrder" />
+          <NavigationProperty Name="Payments" Relationship="DMSModel.FK_Debt_Drugstore" FromRole="Drugstore" ToRole="Payment" />
+          <NavigationProperty Name="DrugstoreType" Relationship="DMSModel.FK_Drugstore_DrugstoreType" FromRole="Drugstore" ToRole="DrugstoreType" />
         </EntityType>
         <EntityType Name="DrugstoreType">
           <Key>
             <PropertyRef Name="DrugstoreTypeID" />
           </Key>
           <Property Name="DrugstoreTypeID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="DrugstoreTypeName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="DiscountRates" Relationship="Self.FK_DiscountRate_DrugstoreType" FromRole="DrugstoreType" ToRole="DiscountRate" />
-          <NavigationProperty Name="Drugstores" Relationship="Self.FK_Drugstore_DrugstoreType" FromRole="DrugstoreType" ToRole="Drugstore" />
+          <Property Name="DrugstoreTypeName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="DiscountRates" Relationship="DMSModel.FK_DiscountRate_DrugstoreType" FromRole="DrugstoreType" ToRole="DiscountRate" />
+          <NavigationProperty Name="Drugstores" Relationship="DMSModel.FK_Drugstore_DrugstoreType" FromRole="DrugstoreType" ToRole="Drugstore" />
         </EntityType>
         <EntityType Name="DrugType">
           <Key>
@@ -783,7 +856,7 @@
           <Property Name="DrugTypeID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="DrugTypeName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="IsActive" Type="Boolean" />
-          <NavigationProperty Name="Drugs" Relationship="Self.FK_Drug_DrugType" FromRole="DrugType" ToRole="Drug" />
+          <NavigationProperty Name="Drugs" Relationship="DMSModel.FK_Drug_DrugType" FromRole="DrugType" ToRole="Drug" />
         </EntityType>
         <EntityType Name="Payment">
           <Key>
@@ -796,7 +869,9 @@
           <Property Name="Balance" Type="Double" />
           <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="IsActive" Type="Boolean" />
-          <NavigationProperty Name="Drugstore" Relationship="Self.FK_Debt_Drugstore" FromRole="Payment" ToRole="Drugstore" />
+          <Property Name="FullName" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="13" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="Drugstore" Relationship="DMSModel.FK_Debt_Drugstore" FromRole="Payment" ToRole="Drugstore" />
         </EntityType>
         <EntityType Name="Price">
           <Key>
@@ -806,8 +881,8 @@
           <Property Name="DrugID" Type="Int32" Nullable="false" />
           <Property Name="UnitID" Type="Int32" Nullable="false" />
           <Property Name="UnitPrice" Type="Double" Nullable="false" />
-          <NavigationProperty Name="Drug" Relationship="Self.FK_Price_Drug" FromRole="Price" ToRole="Drug" />
-          <NavigationProperty Name="Unit" Relationship="Self.FK_Price_Unit" FromRole="Price" ToRole="Unit" />
+          <NavigationProperty Name="Drug" Relationship="DMSModel.FK_Price_Drug" FromRole="Price" ToRole="Drug" />
+          <NavigationProperty Name="Unit" Relationship="DMSModel.FK_Price_Unit" FromRole="Price" ToRole="Unit" />
         </EntityType>
         <EntityType Name="Role">
           <Key>
@@ -815,13 +890,13 @@
           </Key>
           <Property Name="RoleID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="RoleName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Accounts" Relationship="Self.FK_Account_Role" FromRole="Role" ToRole="Account" />
+          <NavigationProperty Name="Accounts" Relationship="DMSModel.FK_Account_Role" FromRole="Role" ToRole="Account" />
         </EntityType>
         <EntityType Name="sysdiagram">
           <Key>
             <PropertyRef Name="diagram_id" />
           </Key>
-          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
           <Property Name="principal_id" Type="Int32" Nullable="false" />
           <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="version" Type="Int32" />
@@ -832,13 +907,13 @@
             <PropertyRef Name="UnitId" />
           </Key>
           <Property Name="UnitId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="UnitName" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="DrugOrderDetails" Relationship="Self.FK_DrugOrderDetails_Unit" FromRole="Unit" ToRole="DrugOrderDetails" />
-          <NavigationProperty Name="Prices" Relationship="Self.FK_Price_Unit" FromRole="Unit" ToRole="Price" />
+          <Property Name="UnitName" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="DrugOrderDetails" Relationship="DMSModel.FK_DrugOrderDetails_Unit" FromRole="Unit" ToRole="DrugOrderDetail" />
+          <NavigationProperty Name="Prices" Relationship="DMSModel.FK_Price_Unit" FromRole="Unit" ToRole="Price" />
         </EntityType>
         <Association Name="FK_Account_AccountProfile">
-          <End Role="AccountProfile" Type="Self.AccountProfile" Multiplicity="1" />
-          <End Role="Account" Type="Self.Account" Multiplicity="*" />
+          <End Type="DMSModel.AccountProfile" Role="AccountProfile" Multiplicity="1" />
+          <End Type="DMSModel.Account" Role="Account" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="AccountProfile">
               <PropertyRef Name="ProfileID" />
@@ -849,8 +924,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Account_Role">
-          <End Role="Role" Type="Self.Role" Multiplicity="1" />
-          <End Role="Account" Type="Self.Account" Multiplicity="*" />
+          <End Type="DMSModel.Role" Role="Role" Multiplicity="1" />
+          <End Type="DMSModel.Account" Role="Account" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Role">
               <PropertyRef Name="RoleID" />
@@ -861,8 +936,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_District_Account">
-          <End Role="Account" Type="Self.Account" Multiplicity="0..1" />
-          <End Role="District" Type="Self.District" Multiplicity="*" />
+          <End Type="DMSModel.Account" Role="Account" Multiplicity="0..1" />
+          <End Type="DMSModel.District" Role="District" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Account">
               <PropertyRef Name="AccountID" />
@@ -873,8 +948,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Drugstore_Account">
-          <End Role="Account" Type="Self.Account" Multiplicity="0..1" />
-          <End Role="Drugstore" Type="Self.Drugstore" Multiplicity="*" />
+          <End Type="DMSModel.Account" Role="Account" Multiplicity="0..1" />
+          <End Type="DMSModel.Drugstore" Role="Drugstore" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Account">
               <PropertyRef Name="AccountID" />
@@ -884,33 +959,21 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Drugstore_Account1">
-          <End Role="Account" Type="Self.Account" Multiplicity="0..1" />
-          <End Role="Drugstore" Type="Self.Drugstore" Multiplicity="*" />
+        <Association Name="FK_District_City">
+          <End Type="DMSModel.City" Role="City" Multiplicity="0..1" />
+          <End Type="DMSModel.District" Role="District" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Account">
-              <PropertyRef Name="AccountID" />
+            <Principal Role="City">
+              <PropertyRef Name="CityID" />
             </Principal>
-            <Dependent Role="Drugstore">
-              <PropertyRef Name="ApprovedByStaffID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_DrugstoreGroup_Account">
-          <End Role="Account" Type="Self.Account" Multiplicity="0..1" />
-          <End Role="DrugstoreGroup" Type="Self.DrugstoreGroup" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Account">
-              <PropertyRef Name="AccountID" />
-            </Principal>
-            <Dependent Role="DrugstoreGroup">
-              <PropertyRef Name="SalesmanID" />
+            <Dependent Role="District">
+              <PropertyRef Name="CityID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_DeliverySchedule_DeliveryMan">
-          <End Role="DeliveryMan" Type="Self.DeliveryMan" Multiplicity="1" />
-          <End Role="DeliverySchedule" Type="Self.DeliverySchedule" Multiplicity="*" />
+          <End Type="DMSModel.DeliveryMan" Role="DeliveryMan" Multiplicity="1" />
+          <End Type="DMSModel.DeliverySchedule" Role="DeliverySchedule" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="DeliveryMan">
               <PropertyRef Name="DeliveryManID" />
@@ -921,32 +984,32 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_DeliveryScheduleDetails_DeliverySchedule">
-          <End Role="DeliverySchedule" Type="Self.DeliverySchedule" Multiplicity="1" />
-          <End Role="DeliveryScheduleDetails" Type="Self.DeliveryScheduleDetail" Multiplicity="*" />
+          <End Type="DMSModel.DeliverySchedule" Role="DeliverySchedule" Multiplicity="1" />
+          <End Type="DMSModel.DeliveryScheduleDetail" Role="DeliveryScheduleDetail" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="DeliverySchedule">
               <PropertyRef Name="DeliveryScheduleID" />
             </Principal>
-            <Dependent Role="DeliveryScheduleDetails">
+            <Dependent Role="DeliveryScheduleDetail">
               <PropertyRef Name="DeliveryScheduleID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_DeliveryScheduleDetails_DrugOrder">
-          <End Role="DrugOrder" Type="Self.DrugOrder" Multiplicity="1" />
-          <End Role="DeliveryScheduleDetails" Type="Self.DeliveryScheduleDetail" Multiplicity="*" />
+          <End Type="DMSModel.DrugOrder" Role="DrugOrder" Multiplicity="1" />
+          <End Type="DMSModel.DeliveryScheduleDetail" Role="DeliveryScheduleDetail" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="DrugOrder">
               <PropertyRef Name="DrugOrderID" />
             </Principal>
-            <Dependent Role="DeliveryScheduleDetails">
+            <Dependent Role="DeliveryScheduleDetail">
               <PropertyRef Name="DrugOrderID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_DiscountRate_Drug">
-          <End Role="Drug" Type="Self.Drug" Multiplicity="1" />
-          <End Role="DiscountRate" Type="Self.DiscountRate" Multiplicity="*" />
+          <End Type="DMSModel.Drug" Role="Drug" Multiplicity="1" />
+          <End Type="DMSModel.DiscountRate" Role="DiscountRate" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Drug">
               <PropertyRef Name="DrugID" />
@@ -957,8 +1020,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_DiscountRate_DrugstoreType">
-          <End Role="DrugstoreType" Type="Self.DrugstoreType" Multiplicity="1" />
-          <End Role="DiscountRate" Type="Self.DiscountRate" Multiplicity="*" />
+          <End Type="DMSModel.DrugstoreType" Role="DrugstoreType" Multiplicity="1" />
+          <End Type="DMSModel.DiscountRate" Role="DiscountRate" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="DrugstoreType">
               <PropertyRef Name="DrugstoreTypeID" />
@@ -969,8 +1032,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Drugstore_District">
-          <End Role="District" Type="Self.District" Multiplicity="0..1" />
-          <End Role="Drugstore" Type="Self.Drugstore" Multiplicity="*" />
+          <End Type="DMSModel.District" Role="District" Multiplicity="0..1" />
+          <End Type="DMSModel.Drugstore" Role="Drugstore" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="District">
               <PropertyRef Name="DistrictID" />
@@ -981,8 +1044,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Drug_DrugCompany">
-          <End Role="DrugCompany" Type="Self.DrugCompany" Multiplicity="0..1" />
-          <End Role="Drug" Type="Self.Drug" Multiplicity="*" />
+          <End Type="DMSModel.DrugCompany" Role="DrugCompany" Multiplicity="0..1" />
+          <End Type="DMSModel.Drug" Role="Drug" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="DrugCompany">
               <PropertyRef Name="DrugCompanyID" />
@@ -993,8 +1056,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Drug_DrugType">
-          <End Role="DrugType" Type="Self.DrugType" Multiplicity="0..1" />
-          <End Role="Drug" Type="Self.Drug" Multiplicity="*" />
+          <End Type="DMSModel.DrugType" Role="DrugType" Multiplicity="0..1" />
+          <End Type="DMSModel.Drug" Role="Drug" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="DrugType">
               <PropertyRef Name="DrugTypeID" />
@@ -1005,20 +1068,20 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_DrugOrderDetails_Drug">
-          <End Role="Drug" Type="Self.Drug" Multiplicity="1" />
-          <End Role="DrugOrderDetails" Type="Self.DrugOrderDetail" Multiplicity="*" />
+          <End Type="DMSModel.Drug" Role="Drug" Multiplicity="1" />
+          <End Type="DMSModel.DrugOrderDetail" Role="DrugOrderDetail" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Drug">
               <PropertyRef Name="DrugID" />
             </Principal>
-            <Dependent Role="DrugOrderDetails">
+            <Dependent Role="DrugOrderDetail">
               <PropertyRef Name="DrugId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Price_Drug">
-          <End Role="Drug" Type="Self.Drug" Multiplicity="1" />
-          <End Role="Price" Type="Self.Price" Multiplicity="*" />
+          <End Type="DMSModel.Drug" Role="Drug" Multiplicity="1" />
+          <End Type="DMSModel.Price" Role="Price" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Drug">
               <PropertyRef Name="DrugID" />
@@ -1029,8 +1092,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_DrugOrder_Drugstore">
-          <End Role="Drugstore" Type="Self.Drugstore" Multiplicity="1" />
-          <End Role="DrugOrder" Type="Self.DrugOrder" Multiplicity="*" />
+          <End Type="DMSModel.Drugstore" Role="Drugstore" Multiplicity="1" />
+          <End Type="DMSModel.DrugOrder" Role="DrugOrder" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Drugstore">
               <PropertyRef Name="DrugstoreID" />
@@ -1041,32 +1104,32 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_DrugOrderDetails_DrugOrder">
-          <End Role="DrugOrder" Type="Self.DrugOrder" Multiplicity="1" />
-          <End Role="DrugOrderDetails" Type="Self.DrugOrderDetail" Multiplicity="*" />
+          <End Type="DMSModel.DrugOrder" Role="DrugOrder" Multiplicity="1" />
+          <End Type="DMSModel.DrugOrderDetail" Role="DrugOrderDetail" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="DrugOrder">
               <PropertyRef Name="DrugOrderID" />
             </Principal>
-            <Dependent Role="DrugOrderDetails">
+            <Dependent Role="DrugOrderDetail">
               <PropertyRef Name="DrugOrderID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_DrugOrderDetails_Unit">
-          <End Role="Unit" Type="Self.Unit" Multiplicity="1" />
-          <End Role="DrugOrderDetails" Type="Self.DrugOrderDetail" Multiplicity="*" />
+          <End Type="DMSModel.Unit" Role="Unit" Multiplicity="1" />
+          <End Type="DMSModel.DrugOrderDetail" Role="DrugOrderDetail" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Unit">
               <PropertyRef Name="UnitId" />
             </Principal>
-            <Dependent Role="DrugOrderDetails">
+            <Dependent Role="DrugOrderDetail">
               <PropertyRef Name="UnitID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Debt_Drugstore">
-          <End Role="Drugstore" Type="Self.Drugstore" Multiplicity="0..1" />
-          <End Role="Payment" Type="Self.Payment" Multiplicity="*" />
+          <End Type="DMSModel.Drugstore" Role="Drugstore" Multiplicity="0..1" />
+          <End Type="DMSModel.Payment" Role="Payment" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Drugstore">
               <PropertyRef Name="DrugstoreID" />
@@ -1076,21 +1139,9 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Drugstore_DrugstoreGroup">
-          <End Role="DrugstoreGroup" Type="Self.DrugstoreGroup" Multiplicity="0..1" />
-          <End Role="Drugstore" Type="Self.Drugstore" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="DrugstoreGroup">
-              <PropertyRef Name="DrugstoreGroupID" />
-            </Principal>
-            <Dependent Role="Drugstore">
-              <PropertyRef Name="DrugstoreGroupID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Drugstore_DrugstoreType">
-          <End Role="DrugstoreType" Type="Self.DrugstoreType" Multiplicity="0..1" />
-          <End Role="Drugstore" Type="Self.Drugstore" Multiplicity="*" />
+          <End Type="DMSModel.DrugstoreType" Role="DrugstoreType" Multiplicity="0..1" />
+          <End Type="DMSModel.Drugstore" Role="Drugstore" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="DrugstoreType">
               <PropertyRef Name="DrugstoreTypeID" />
@@ -1101,8 +1152,8 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Price_Unit">
-          <End Role="Unit" Type="Self.Unit" Multiplicity="1" />
-          <End Role="Price" Type="Self.Price" Multiplicity="*" />
+          <End Type="DMSModel.Unit" Role="Unit" Multiplicity="1" />
+          <End Type="DMSModel.Price" Role="Price" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Unit">
               <PropertyRef Name="UnitId" />
@@ -1112,121 +1163,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="DMPEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Accounts" EntityType="Self.Account" />
-          <EntitySet Name="AccountProfiles" EntityType="Self.AccountProfile" />
-          <EntitySet Name="DeliveryMen" EntityType="Self.DeliveryMan" />
-          <EntitySet Name="DeliverySchedules" EntityType="Self.DeliverySchedule" />
-          <EntitySet Name="DeliveryScheduleDetails" EntityType="Self.DeliveryScheduleDetail" />
-          <EntitySet Name="DiscountRates" EntityType="Self.DiscountRate" />
-          <EntitySet Name="Districts" EntityType="Self.District" />
-          <EntitySet Name="Drugs" EntityType="Self.Drug" />
-          <EntitySet Name="DrugCompanies" EntityType="Self.DrugCompany" />
-          <EntitySet Name="DrugOrders" EntityType="Self.DrugOrder" />
-          <EntitySet Name="DrugOrderDetails" EntityType="Self.DrugOrderDetail" />
-          <EntitySet Name="Drugstores" EntityType="Self.Drugstore" />
-          <EntitySet Name="DrugstoreGroups" EntityType="Self.DrugstoreGroup" />
-          <EntitySet Name="DrugstoreTypes" EntityType="Self.DrugstoreType" />
-          <EntitySet Name="DrugTypes" EntityType="Self.DrugType" />
-          <EntitySet Name="Payments" EntityType="Self.Payment" />
-          <EntitySet Name="Prices" EntityType="Self.Price" />
-          <EntitySet Name="Roles" EntityType="Self.Role" />
-          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
-          <EntitySet Name="Units" EntityType="Self.Unit" />
-          <AssociationSet Name="FK_Account_AccountProfile" Association="Self.FK_Account_AccountProfile">
-            <End Role="AccountProfile" EntitySet="AccountProfiles" />
-            <End Role="Account" EntitySet="Accounts" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Account_Role" Association="Self.FK_Account_Role">
-            <End Role="Role" EntitySet="Roles" />
-            <End Role="Account" EntitySet="Accounts" />
-          </AssociationSet>
-          <AssociationSet Name="FK_District_Account" Association="Self.FK_District_Account">
-            <End Role="Account" EntitySet="Accounts" />
-            <End Role="District" EntitySet="Districts" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Drugstore_Account" Association="Self.FK_Drugstore_Account">
-            <End Role="Account" EntitySet="Accounts" />
-            <End Role="Drugstore" EntitySet="Drugstores" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Drugstore_Account1" Association="Self.FK_Drugstore_Account1">
-            <End Role="Account" EntitySet="Accounts" />
-            <End Role="Drugstore" EntitySet="Drugstores" />
-          </AssociationSet>
-          <AssociationSet Name="FK_DrugstoreGroup_Account" Association="Self.FK_DrugstoreGroup_Account">
-            <End Role="Account" EntitySet="Accounts" />
-            <End Role="DrugstoreGroup" EntitySet="DrugstoreGroups" />
-          </AssociationSet>
-          <AssociationSet Name="FK_DeliverySchedule_DeliveryMan" Association="Self.FK_DeliverySchedule_DeliveryMan">
-            <End Role="DeliveryMan" EntitySet="DeliveryMen" />
-            <End Role="DeliverySchedule" EntitySet="DeliverySchedules" />
-          </AssociationSet>
-          <AssociationSet Name="FK_DeliveryScheduleDetails_DeliverySchedule" Association="Self.FK_DeliveryScheduleDetails_DeliverySchedule">
-            <End Role="DeliverySchedule" EntitySet="DeliverySchedules" />
-            <End Role="DeliveryScheduleDetails" EntitySet="DeliveryScheduleDetails" />
-          </AssociationSet>
-          <AssociationSet Name="FK_DeliveryScheduleDetails_DrugOrder" Association="Self.FK_DeliveryScheduleDetails_DrugOrder">
-            <End Role="DrugOrder" EntitySet="DrugOrders" />
-            <End Role="DeliveryScheduleDetails" EntitySet="DeliveryScheduleDetails" />
-          </AssociationSet>
-          <AssociationSet Name="FK_DiscountRate_Drug" Association="Self.FK_DiscountRate_Drug">
-            <End Role="Drug" EntitySet="Drugs" />
-            <End Role="DiscountRate" EntitySet="DiscountRates" />
-          </AssociationSet>
-          <AssociationSet Name="FK_DiscountRate_DrugstoreType" Association="Self.FK_DiscountRate_DrugstoreType">
-            <End Role="DrugstoreType" EntitySet="DrugstoreTypes" />
-            <End Role="DiscountRate" EntitySet="DiscountRates" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Drugstore_District" Association="Self.FK_Drugstore_District">
-            <End Role="District" EntitySet="Districts" />
-            <End Role="Drugstore" EntitySet="Drugstores" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Drug_DrugCompany" Association="Self.FK_Drug_DrugCompany">
-            <End Role="DrugCompany" EntitySet="DrugCompanies" />
-            <End Role="Drug" EntitySet="Drugs" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Drug_DrugType" Association="Self.FK_Drug_DrugType">
-            <End Role="DrugType" EntitySet="DrugTypes" />
-            <End Role="Drug" EntitySet="Drugs" />
-          </AssociationSet>
-          <AssociationSet Name="FK_DrugOrderDetails_Drug" Association="Self.FK_DrugOrderDetails_Drug">
-            <End Role="Drug" EntitySet="Drugs" />
-            <End Role="DrugOrderDetails" EntitySet="DrugOrderDetails" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Price_Drug" Association="Self.FK_Price_Drug">
-            <End Role="Drug" EntitySet="Drugs" />
-            <End Role="Price" EntitySet="Prices" />
-          </AssociationSet>
-          <AssociationSet Name="FK_DrugOrder_Drugstore" Association="Self.FK_DrugOrder_Drugstore">
-            <End Role="Drugstore" EntitySet="Drugstores" />
-            <End Role="DrugOrder" EntitySet="DrugOrders" />
-          </AssociationSet>
-          <AssociationSet Name="FK_DrugOrderDetails_DrugOrder" Association="Self.FK_DrugOrderDetails_DrugOrder">
-            <End Role="DrugOrder" EntitySet="DrugOrders" />
-            <End Role="DrugOrderDetails" EntitySet="DrugOrderDetails" />
-          </AssociationSet>
-          <AssociationSet Name="FK_DrugOrderDetails_Unit" Association="Self.FK_DrugOrderDetails_Unit">
-            <End Role="Unit" EntitySet="Units" />
-            <End Role="DrugOrderDetails" EntitySet="DrugOrderDetails" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Debt_Drugstore" Association="Self.FK_Debt_Drugstore">
-            <End Role="Drugstore" EntitySet="Drugstores" />
-            <End Role="Payment" EntitySet="Payments" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Drugstore_DrugstoreGroup" Association="Self.FK_Drugstore_DrugstoreGroup">
-            <End Role="DrugstoreGroup" EntitySet="DrugstoreGroups" />
-            <End Role="Drugstore" EntitySet="Drugstores" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Drugstore_DrugstoreType" Association="Self.FK_Drugstore_DrugstoreType">
-            <End Role="DrugstoreType" EntitySet="DrugstoreTypes" />
-            <End Role="Drugstore" EntitySet="Drugstores" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Price_Unit" Association="Self.FK_Price_Unit">
-            <End Role="Unit" EntitySet="Units" />
-            <End Role="Price" EntitySet="Prices" />
-          </AssociationSet>
-        </EntityContainer>
-      </Schema>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
@@ -1235,213 +1172,216 @@
           <EntitySetMapping Name="Accounts">
             <EntityTypeMapping TypeName="DMSModel.Account">
               <MappingFragment StoreEntitySet="Account">
-                <ScalarProperty Name="AccountID" ColumnName="AccountID" />
-                <ScalarProperty Name="RoleID" ColumnName="RoleID" />
-                <ScalarProperty Name="ProfileID" ColumnName="ProfileID" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="Password" ColumnName="Password" />
-                <ScalarProperty Name="IsPending" ColumnName="IsPending" />
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="IsPending" ColumnName="IsPending" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="ProfileID" ColumnName="ProfileID" />
+                <ScalarProperty Name="RoleID" ColumnName="RoleID" />
+                <ScalarProperty Name="AccountID" ColumnName="AccountID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="AccountProfiles">
             <EntityTypeMapping TypeName="DMSModel.AccountProfile">
               <MappingFragment StoreEntitySet="AccountProfile">
-                <ScalarProperty Name="ProfileID" ColumnName="ProfileID" />
-                <ScalarProperty Name="FullName" ColumnName="FullName" />
-                <ScalarProperty Name="Phone" ColumnName="Phone" />
-                <ScalarProperty Name="Address" ColumnName="Address" />
                 <ScalarProperty Name="Coordinate" ColumnName="Coordinate" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="FullName" ColumnName="FullName" />
+                <ScalarProperty Name="ProfileID" ColumnName="ProfileID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Cities">
+            <EntityTypeMapping TypeName="DMSModel.City">
+              <MappingFragment StoreEntitySet="City">
+                <ScalarProperty Name="CityName" ColumnName="CityName" />
+                <ScalarProperty Name="CityID" ColumnName="CityID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="DeliveryMen">
             <EntityTypeMapping TypeName="DMSModel.DeliveryMan">
               <MappingFragment StoreEntitySet="DeliveryMan">
-                <ScalarProperty Name="DeliveryManID" ColumnName="DeliveryManID" />
-                <ScalarProperty Name="FullName" ColumnName="FullName" />
-                <ScalarProperty Name="Address" ColumnName="Address" />
-                <ScalarProperty Name="Phone" ColumnName="Phone" />
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="FullName" ColumnName="FullName" />
+                <ScalarProperty Name="DeliveryManID" ColumnName="DeliveryManID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="DeliverySchedules">
             <EntityTypeMapping TypeName="DMSModel.DeliverySchedule">
               <MappingFragment StoreEntitySet="DeliverySchedule">
-                <ScalarProperty Name="DeliveryScheduleID" ColumnName="DeliveryScheduleID" />
-                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
-                <ScalarProperty Name="DueDate" ColumnName="DueDate" />
-                <ScalarProperty Name="DeliveryManID" ColumnName="DeliveryManID" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="DeliveryManID" ColumnName="DeliveryManID" />
+                <ScalarProperty Name="DueDate" ColumnName="DueDate" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="DeliveryScheduleID" ColumnName="DeliveryScheduleID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="DeliveryScheduleDetails">
             <EntityTypeMapping TypeName="DMSModel.DeliveryScheduleDetail">
               <MappingFragment StoreEntitySet="DeliveryScheduleDetails">
-                <ScalarProperty Name="DeliveryScheduleDetailsID" ColumnName="DeliveryScheduleDetailsID" />
-                <ScalarProperty Name="DeliveryScheduleID" ColumnName="DeliveryScheduleID" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="DrugOrderID" ColumnName="DrugOrderID" />
+                <ScalarProperty Name="DeliveryScheduleID" ColumnName="DeliveryScheduleID" />
+                <ScalarProperty Name="DeliveryScheduleDetailsID" ColumnName="DeliveryScheduleDetailsID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="DiscountRates">
             <EntityTypeMapping TypeName="DMSModel.DiscountRate">
               <MappingFragment StoreEntitySet="DiscountRate">
-                <ScalarProperty Name="DrugstoreTypeID" ColumnName="DrugstoreTypeID" />
-                <ScalarProperty Name="DrugID" ColumnName="DrugID" />
                 <ScalarProperty Name="Discount" ColumnName="Discount" />
+                <ScalarProperty Name="DrugID" ColumnName="DrugID" />
+                <ScalarProperty Name="DrugstoreTypeID" ColumnName="DrugstoreTypeID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Districts">
             <EntityTypeMapping TypeName="DMSModel.District">
               <MappingFragment StoreEntitySet="District">
-                <ScalarProperty Name="DistrictID" ColumnName="DistrictID" />
-                <ScalarProperty Name="DistrictName" ColumnName="DistrictName" />
+                <ScalarProperty Name="CityID" ColumnName="CityID" />
                 <ScalarProperty Name="SalesmanID" ColumnName="SalesmanID" />
+                <ScalarProperty Name="DistrictName" ColumnName="DistrictName" />
+                <ScalarProperty Name="DistrictID" ColumnName="DistrictID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Drugs">
             <EntityTypeMapping TypeName="DMSModel.Drug">
               <MappingFragment StoreEntitySet="Drug">
-                <ScalarProperty Name="DrugID" ColumnName="DrugID" />
-                <ScalarProperty Name="DrugCompanyID" ColumnName="DrugCompanyID" />
-                <ScalarProperty Name="DrugTypeID" ColumnName="DrugTypeID" />
-                <ScalarProperty Name="DrugName" ColumnName="DrugName" />
-                <ScalarProperty Name="MiniDescription" ColumnName="MiniDescription" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="ImageUrl" ColumnName="ImageUrl" />
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="ImageUrl" ColumnName="ImageUrl" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="MiniDescription" ColumnName="MiniDescription" />
+                <ScalarProperty Name="DrugName" ColumnName="DrugName" />
+                <ScalarProperty Name="DrugTypeID" ColumnName="DrugTypeID" />
+                <ScalarProperty Name="DrugCompanyID" ColumnName="DrugCompanyID" />
+                <ScalarProperty Name="DrugID" ColumnName="DrugID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="DrugCompanies">
             <EntityTypeMapping TypeName="DMSModel.DrugCompany">
               <MappingFragment StoreEntitySet="DrugCompany">
-                <ScalarProperty Name="DrugCompanyID" ColumnName="DrugCompanyID" />
-                <ScalarProperty Name="DrugCompanyName" ColumnName="DrugCompanyName" />
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="DrugCompanyName" ColumnName="DrugCompanyName" />
+                <ScalarProperty Name="DrugCompanyID" ColumnName="DrugCompanyID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="DrugOrders">
             <EntityTypeMapping TypeName="DMSModel.DrugOrder">
               <MappingFragment StoreEntitySet="DrugOrder">
-                <ScalarProperty Name="DrugOrderID" ColumnName="DrugOrderID" />
-                <ScalarProperty Name="DrugstoreID" ColumnName="DrugstoreID" />
-                <ScalarProperty Name="Note" ColumnName="Note" />
-                <ScalarProperty Name="TotalPrice" ColumnName="TotalPrice" />
-                <ScalarProperty Name="DateOrder" ColumnName="DateOrder" />
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="DateOrder" ColumnName="DateOrder" />
+                <ScalarProperty Name="TotalPrice" ColumnName="TotalPrice" />
+                <ScalarProperty Name="Note" ColumnName="Note" />
+                <ScalarProperty Name="DrugstoreID" ColumnName="DrugstoreID" />
+                <ScalarProperty Name="DrugOrderID" ColumnName="DrugOrderID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="DrugOrderDetails">
             <EntityTypeMapping TypeName="DMSModel.DrugOrderDetail">
               <MappingFragment StoreEntitySet="DrugOrderDetails">
-                <ScalarProperty Name="DrugOrderDetailsID" ColumnName="DrugOrderDetailsID" />
-                <ScalarProperty Name="DrugOrderID" ColumnName="DrugOrderID" />
-                <ScalarProperty Name="DrugId" ColumnName="DrugId" />
-                <ScalarProperty Name="UnitID" ColumnName="UnitID" />
-                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="Note" ColumnName="Note" />
+                <ScalarProperty Name="DeliveryQuantity" ColumnName="DeliveryQuantity" />
                 <ScalarProperty Name="UnitPrice" ColumnName="UnitPrice" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="UnitID" ColumnName="UnitID" />
+                <ScalarProperty Name="DrugId" ColumnName="DrugId" />
+                <ScalarProperty Name="DrugOrderID" ColumnName="DrugOrderID" />
+                <ScalarProperty Name="DrugOrderDetailsID" ColumnName="DrugOrderDetailsID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Drugstores">
             <EntityTypeMapping TypeName="DMSModel.Drugstore">
               <MappingFragment StoreEntitySet="Drugstore">
-                <ScalarProperty Name="DrugstoreID" ColumnName="DrugstoreID" />
-                <ScalarProperty Name="DrugstoreName" ColumnName="DrugstoreName" />
-                <ScalarProperty Name="Address" ColumnName="Address" />
-                <ScalarProperty Name="Coordinate" ColumnName="Coordinate" />
-                <ScalarProperty Name="OwnerID" ColumnName="OwnerID" />
-                <ScalarProperty Name="DrugstoreGroupID" ColumnName="DrugstoreGroupID" />
-                <ScalarProperty Name="ApprovedByStaffID" ColumnName="ApprovedByStaffID" />
-                <ScalarProperty Name="DrugstoreTypeID" ColumnName="DrugstoreTypeID" />
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-                <ScalarProperty Name="Debt" ColumnName="Debt" />
                 <ScalarProperty Name="DistrictID" ColumnName="DistrictID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="DrugstoreGroups">
-            <EntityTypeMapping TypeName="DMSModel.DrugstoreGroup">
-              <MappingFragment StoreEntitySet="DrugstoreGroup">
-                <ScalarProperty Name="DrugstoreGroupID" ColumnName="DrugstoreGroupID" />
-                <ScalarProperty Name="SalesmanID" ColumnName="SalesmanID" />
-                <ScalarProperty Name="DrugstoreCentroid" ColumnName="DrugstoreCentroid" />
+                <ScalarProperty Name="Debt" ColumnName="Debt" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="DrugstoreTypeID" ColumnName="DrugstoreTypeID" />
+                <ScalarProperty Name="OwnerID" ColumnName="OwnerID" />
+                <ScalarProperty Name="Coordinate" ColumnName="Coordinate" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="DrugstoreName" ColumnName="DrugstoreName" />
+                <ScalarProperty Name="DrugstoreID" ColumnName="DrugstoreID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="DrugstoreTypes">
             <EntityTypeMapping TypeName="DMSModel.DrugstoreType">
               <MappingFragment StoreEntitySet="DrugstoreType">
-                <ScalarProperty Name="DrugstoreTypeID" ColumnName="DrugstoreTypeID" />
                 <ScalarProperty Name="DrugstoreTypeName" ColumnName="DrugstoreTypeName" />
+                <ScalarProperty Name="DrugstoreTypeID" ColumnName="DrugstoreTypeID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="DrugTypes">
             <EntityTypeMapping TypeName="DMSModel.DrugType">
               <MappingFragment StoreEntitySet="DrugType">
-                <ScalarProperty Name="DrugTypeID" ColumnName="DrugTypeID" />
-                <ScalarProperty Name="DrugTypeName" ColumnName="DrugTypeName" />
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="DrugTypeName" ColumnName="DrugTypeName" />
+                <ScalarProperty Name="DrugTypeID" ColumnName="DrugTypeID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Payments">
             <EntityTypeMapping TypeName="DMSModel.Payment">
               <MappingFragment StoreEntitySet="Payment">
-                <ScalarProperty Name="PaymentID" ColumnName="PaymentID" />
-                <ScalarProperty Name="DrugstoreID" ColumnName="DrugstoreID" />
-                <ScalarProperty Name="PaymentType" ColumnName="PaymentType" />
-                <ScalarProperty Name="Amount" ColumnName="Amount" />
-                <ScalarProperty Name="Balance" ColumnName="Balance" />
-                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="FullName" ColumnName="FullName" />
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Balance" ColumnName="Balance" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="PaymentType" ColumnName="PaymentType" />
+                <ScalarProperty Name="DrugstoreID" ColumnName="DrugstoreID" />
+                <ScalarProperty Name="PaymentID" ColumnName="PaymentID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Prices">
             <EntityTypeMapping TypeName="DMSModel.Price">
               <MappingFragment StoreEntitySet="Price">
-                <ScalarProperty Name="DrugID" ColumnName="DrugID" />
-                <ScalarProperty Name="UnitID" ColumnName="UnitID" />
                 <ScalarProperty Name="UnitPrice" ColumnName="UnitPrice" />
+                <ScalarProperty Name="UnitID" ColumnName="UnitID" />
+                <ScalarProperty Name="DrugID" ColumnName="DrugID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Roles">
             <EntityTypeMapping TypeName="DMSModel.Role">
               <MappingFragment StoreEntitySet="Role">
-                <ScalarProperty Name="RoleID" ColumnName="RoleID" />
                 <ScalarProperty Name="RoleName" ColumnName="RoleName" />
+                <ScalarProperty Name="RoleID" ColumnName="RoleID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="sysdiagrams">
             <EntityTypeMapping TypeName="DMSModel.sysdiagram">
               <MappingFragment StoreEntitySet="sysdiagrams">
-                <ScalarProperty Name="name" ColumnName="name" />
-                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
-                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
-                <ScalarProperty Name="version" ColumnName="version" />
                 <ScalarProperty Name="definition" ColumnName="definition" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Units">
             <EntityTypeMapping TypeName="DMSModel.Unit">
               <MappingFragment StoreEntitySet="Unit">
-                <ScalarProperty Name="UnitId" ColumnName="UnitId" />
                 <ScalarProperty Name="UnitName" ColumnName="UnitName" />
+                <ScalarProperty Name="UnitId" ColumnName="UnitId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

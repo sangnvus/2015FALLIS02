@@ -23,7 +23,7 @@ namespace DMS.DAL
         private GenericRepository<DrugOrder> drugOrderRepository;
         private GenericRepository<DrugOrderDetail> drugOrderDetailRepository;
         private GenericRepository<Drugstore> drugstoreRepository;
-        private GenericRepository<DrugstoreGroup> drugstoreGroupRepository;
+        //private GenericRepository<DrugstoreGroup> drugstoreGroupRepository;
         private GenericRepository<DrugstoreType> drugstoreTypeRepository;
         //private GenericRepository<DrugstoreManagerDetail> drugstoreManagerDetailRepository;
         private GenericRepository<DrugType> drugTypeRepository;
@@ -32,20 +32,21 @@ namespace DMS.DAL
         private GenericRepository<DiscountRate> discountRateRepositoryRepository;
         //private GenericRepository<Tag> tagRepository;
         private GenericRepository<Payment> paymentRepository;
+        private GenericRepository<City> cityRepository;
         //private GenericRepository<FavoriteList> favoriteListRepository;
         //private GenericRepository<FavoriteListDetail> favoriteListDetailsRepository;
 
-        public GenericRepository<DrugstoreGroup>DrugstoreGroupRepository
-        {
-            get
-            {
-                if (this.drugstoreGroupRepository == null)
-                {
-                    this.drugstoreGroupRepository = new GenericRepository<DrugstoreGroup>(context);
-                }
-                return drugstoreGroupRepository;
-            }
-        }
+        //public GenericRepository<DrugstoreGroup>DrugstoreGroupRepository
+        //{
+        //    get
+        //    {
+        //        if (this.drugstoreGroupRepository == null)
+        //        {
+        //            this.drugstoreGroupRepository = new GenericRepository<DrugstoreGroup>(context);
+        //        }
+        //        return drugstoreGroupRepository;
+        //    }
+        //}
         //public GenericRepository<FavoriteList> FavoriteListRepository
         //{
         //    get
@@ -286,6 +287,17 @@ namespace DMS.DAL
                     this.discountRateRepositoryRepository = new GenericRepository<DiscountRate>(context);
                 }
                 return discountRateRepositoryRepository;
+            }
+        }
+        public GenericRepository<City> CityRepository
+        {
+            get
+            {
+                if (this.cityRepository == null)
+                {
+                    this.cityRepository = new GenericRepository<City>(context);
+                }
+                return cityRepository;
             }
         }
         //public GenericRepository<Tag> TagRepository

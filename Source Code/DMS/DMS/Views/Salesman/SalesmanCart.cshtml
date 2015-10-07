@@ -79,7 +79,7 @@
                             }
                             else
                             {
-                                <label style="font-weight: bold;width: 120px" class="pull-left">Tổng giá tiền :</label><div style="font-weight: bold" class="value pull-left total-price-left">0 VND</div>
+                                <label style="font-weight: bold;width: 120px" class="pull-left">Tổng giá tiền :</label><div style="font-weight: bold" class="value pull-left total-price">0 VND</div>
                             }
                     <a class="le-button big" style="float:right" href="@Url.Action("CheckOut", "Salesman")">Tạo Order</a>
                     <table class="table display Keytable dataTable" aria-describedby="example_info">
@@ -88,7 +88,7 @@
                                 <th>Stt</th>
                                 <th>Tên thuốc</th>
                                 <th>Loại thuốc</th>
-                                <th>Hãng</th>
+                                @*<th>Hãng</th>*@
                                 <th>Giá</th>
                                 <th>Đơn vị</th>
                                 <th>Số lượng</th>
@@ -111,7 +111,7 @@
                                     <tr id="@item.Drug.DrugID">
                                         <td>@i</td>
                                         <td><a href="@Url.Action("DrugDetails","Drugs",new{id=@item.Drug.DrugID})">@item.Drug.DrugName</a></td>                                 
-                                        <td>@item.Drug.DrugCompany.DrugCompanyName</td>
+                                        @*<td>@item.Drug.DrugCompany.DrugCompanyName</td>*@
                                         <td>@item.Drug.DrugType.DrugTypeName</td>
                                         <td>
                                             <div id="price-@item.Drug.DrugID" class="price-number">
@@ -221,7 +221,6 @@
                             var newRow = '<tr id="' + data.DrugId + '">\
                                     <td>'+ index + '</td>\
                                     <td><a href="/Drugs/DrugDetails/' + data.DrugId + '">' + data.DrugName + '</a></td>\
-                                    <td>' + data.DrugCompany + '</td>\
                                     <td>' + data.DrugType + '</td>\
                                     <td> <div id="price-' + data.DrugId + '" class="price-number">\
                                             ' + accounting.formatMoney((parseFloat(data.Price) * parseFloat(data.ActualValue)), " ", 0) + '\

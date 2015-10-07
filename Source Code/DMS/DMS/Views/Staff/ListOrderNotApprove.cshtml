@@ -57,8 +57,9 @@
                                         @Html.DisplayFor(modelItem => item.Note)
                                     </td>*@
                                     <td>
-                                        <a style="width: 75px" href="@Url.Action("ApproveOrder", "Staff", new { id = item.DrugOrderID })" class="btn btn-primary">Xác nhận</a>
-                                        <a style="width: 75px" href="@Url.Action("CancelOrder", "Staff", new { id = item.DrugOrderID })" class="btn btn-danger">Huỷ</a>
+                                        <a style="width: 100px" href="@Url.Action("ReviewOrder", "Staff", new { orderID = item.DrugOrderID })" class="btn btn-success">Xem chi tiết</a>
+                                        @*<a style="width: 75px" href="@Url.Action("ApproveOrder", "Staff", new { id = item.DrugOrderID })" class="btn btn-primary">Xác nhận</a>
+                                        <a style="width: 75px" href="@Url.Action("CancelOrder", "Staff", new { id = item.DrugOrderID })" class="btn btn-danger">Huỷ</a>*@
                                     </td>
                                 </tr>
                                 }

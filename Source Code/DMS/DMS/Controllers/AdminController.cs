@@ -154,17 +154,18 @@ namespace DMS.Controllers
             return View();
         }
 
-        public ActionResult CreateNewDelivery(string fullname, string address, string phonenumber)
+        public JsonResult CreateNewDelivery(string fullname, string address, string phonenumber)
         {
             DeliveryMan delivery = new DeliveryMan();
-
+            var result = false;
             delivery.Phone = phonenumber;
             delivery.FullName = fullname;
             delivery.Address = address;
             delivery.IsActive = true;
             unitOfWork.DeliverymanRepository.Insert(delivery);
             unitOfWork.AccountRepository.SaveChanges();
-            return View("ManageStaff");
+            result = true;
+            return Json(result);
         }
 
         public ActionResult CreateDelivery()
@@ -185,12 +186,14 @@ namespace DMS.Controllers
         public ActionResult EditDeli(int id, string fullname, string address, string phonenumber)
         {
             var Delivery = unitOfWork.DeliverymanRepository.GetByID(id);
+            var result = false;
             Delivery.FullName = fullname;
             Delivery.Address = address;
             Delivery.Phone = phonenumber;
             unitOfWork.DeliverymanRepository.Update(Delivery);
             unitOfWork.DeliverymanRepository.SaveChanges();
-            return View("ManageStaff");
+            result = true;
+            return Json(result);
         }
 
 

@@ -14,7 +14,6 @@
                     <th>Tên tiếp thị    </th>
                     <th>Địa chỉ     </th>
                     <th>Số điện thoại      </th>
-                    <th>Email</th>
                     <th></th>
                 </tr>
             </thead>
@@ -29,7 +28,7 @@
                            @Html.DisplayFor(modelItem => item.AccountID)                          
                         </td>*@
                         <td>
-                            @Html.DisplayFor(modelItem => item.UserName)
+                            @Html.DisplayFor(modelItem => item.Email)
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.AccountProfile.FullName)
@@ -40,9 +39,7 @@
                         <td>
                             @Html.DisplayFor(modelItem => item.AccountProfile.Phone)
                         </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.AccountProfile.Email)
-                        </td>
+                       
 
                         <td>
                             @* @if (item.IsActive == true)

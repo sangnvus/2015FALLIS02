@@ -22,8 +22,10 @@ namespace DMS.DAL
         public int DistrictID { get; set; }
         public string DistrictName { get; set; }
         public Nullable<int> SalesmanID { get; set; }
+        public Nullable<int> CityID { get; set; }
     
         public virtual Account Account { get; set; }
+        public virtual City City { get; set; }
         public virtual ICollection<Drugstore> Drugstores { get; set; }
     }
 }

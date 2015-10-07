@@ -25,14 +25,15 @@
                                 @*<th>Hạn giao</th>*@
                                 <th>Tình trạng</th>
                                 <th></th>
-                                <th></th>
+                                @*<th></th>*@
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var item in Model)
                             {
                                 <tr id="@item.DeliveryScheduleID">
-                                    <td><a href="@Url.Action("ScheduleDetail","DeliverySchedule",new{scheduleID=@item.DeliveryScheduleID})">@item.DeliveryScheduleID</a></td>
+                                    <td>@item.DeliveryScheduleID<br/>
+                                        <a href="@Url.Action("ScheduleDetail","DeliverySchedule",new{scheduleID=@item.DeliveryScheduleID})">Xem chi tiết</a></td>
                                     <td>@item.DeliveryMan.FullName</td>
                                     <td>@item.CreateDate</td>
                                     @*<td>@item.DueDate</td>*@
@@ -49,14 +50,15 @@
                                         @if (item.Status == 3)
                                         {
                                             <p>
-                                                <a class="btn btn-primary" id="update-status" data-id="@item.DeliveryScheduleID">Hoàn thành</a>
-                                                <a class="btn btn-danger" id="delete" data-id="@item.DeliveryScheduleID">Xóa</a>
+                                                @*<a class="btn btn-primary" id="update-status" data-id="@item.DeliveryScheduleID">Hoàn thành</a>*@
+                                                <a class="btn btn-success" href="@Url.Action("PrintScheduleDetail", "DeliverySchedule", new { scheduleID= @item.DeliveryScheduleID})">In đơn giao hàng</a>
+                                                <a class="btn btn-danger" id="delete" data-id="@item.DeliveryScheduleID">Hủy bỏ</a>
                                             </p>
                                         }
                                     </td>
-                                    <td>
+                                    @*<td>
                                         <a class="btn btn-success" href="@Url.Action("PrintScheduleDetail", "DeliverySchedule", new { scheduleID= @item.DeliveryScheduleID})" >In đơn giao hàng</a>
-                                    </td>
+                                    </td>*@
                                 </tr>
                             }
                         </tbody>

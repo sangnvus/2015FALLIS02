@@ -4,9 +4,9 @@
     Layout = null;
 }
 
-@using (Html.BeginForm())
+@*@using (Html.BeginForm())
 {
-    @Html.ValidationSummary(true)
+    @Html.ValidationSummary(true)*@
   
     <div class="row">
         <div class="col-md-1">
@@ -41,10 +41,11 @@
     </div>
 
     <p>
-        <button type="submit" class="btn btn-primary" onclick="register()">Tạo mới</button>
+        @*<button type="submit" class="btn btn-primary" onclick="register()">Tạo mới</button>*@
+        <a  class="btn btn-primary" onclick="register()">Tạo mới</a>
         <button type="button" class="btn btn-info" data-dismiss="modal">Hủy</button>
     </p>
-}
+@*}*@
 
 <script type="text/javascript">
     function register() {
@@ -55,7 +56,9 @@
             url: '/Admin/CreateNewDelivery',
             method: 'POST',
             data: {"fullname": fullname, "phonenumber": phonenumber, "address": address},
-            success: function (result) { }
+            success: function(result) {
+                window.location.href = '@Url.Action("ManageStaff","Admin")';
+            }
         });
     }
   

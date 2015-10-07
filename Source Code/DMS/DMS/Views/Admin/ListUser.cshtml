@@ -20,7 +20,6 @@
                                 <th>Tài khoản    </th>
                                 <th>Tên khách hàng    </th>
                                 <th>Số điện thoại      </th>
-                                <th>Email</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -29,16 +28,13 @@
                             {
                                 <tr>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.UserName)
+                                        @Html.DisplayFor(modelItem => item.Email)
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.AccountProfile.FullName)
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.AccountProfile.Phone)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.AccountProfile.Email)
                                     </td>
                                     <td>
                                         @if (item.IsActive == true)

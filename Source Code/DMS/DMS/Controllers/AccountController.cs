@@ -7,6 +7,7 @@ using DMS.DAL;
 using System.Web.Security;
 using System.Security.Cryptography;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace DMS.Controllers
 {
@@ -112,9 +113,19 @@ namespace DMS.Controllers
 
         public ActionResult Register()
         {
-            var listDistrict = unitOfWork.DistrictRepository.GetAll();
-            ViewBag.District = listDistrict;
+            //var listDistrict = unitOfWork.DistrictRepository.GetAll();
+            //ViewBag.District = listDistrict;
+            var listCity = unitOfWork.CityRepository.GetAll();
+            ViewBag.City = listCity;
             return View();
+        }
+
+        public JsonResult ListDistrict(int cityId)
+        {
+            //var listDistrict = unitOfWork.DistrictRepository.Get(b=>b.CityID==cityId);
+            var listDistrict=( from b in unitOfWork.DistrictRepository.Get(b=>b.CityID==cityId)
+                               select new {b.DistrictID,b.DistrictName} ).ToList();
+            return Json(listDistrict);
         }
         public ActionResult RegisterResult(string drugstoreName, string drugstoreAddress)
         {
@@ -129,35 +140,35 @@ namespace DMS.Controllers
         public ActionResult ListNewRegister()
         {
             var user = (Account)Session["User"];
-            var drugstoreGroups = unitOfWork.DrugstoreGroupRepository.Get(b => b.SalesmanID == user.AccountID).ToList();
+            //var drugstoreGroups = unitOfWork.DrugstoreGroupRepository.Get(b => b.SalesmanID == user.AccountID).ToList();
             var accountList = new List<Account>();
-            //for (int i = 0; i < drugstoreGroups.Count; i++)
+            ////for (int i = 0; i < drugstoreGroups.Count; i++)
+            ////{
+            ////    for (int j = 0; j < drugstoreGroups[i].Drugstores.Count; j++)
+            ////    {
+            ////        var item = drugstoreGroups[i].Drugstores.ElementAt(j);
+            ////        if (item.Account != null && item.Account.IsPending == true)
+            ////        {
+            ////            accountList.Add(item.Account);
+            ////        }
+            ////    }
+            ////}
+            //var districtList = unitOfWork.DistrictRepository.Get(b => b.SalesmanID == user.AccountID).ToList();
+            //for (int i = 0; i < districtList.Count; i++)
             //{
-            //    for (int j = 0; j < drugstoreGroups[i].Drugstores.Count; j++)
+            //    for (int j = 0; j < districtList[i].Drugstores.Count; j++)
             //    {
-            //        var item = drugstoreGroups[i].Drugstores.ElementAt(j);
+            //        var item = districtList[i].Drugstores.ElementAt(j);
             //        if (item.Account != null && item.Account.IsPending == true)
             //        {
             //            accountList.Add(item.Account);
             //        }
             //    }
             //}
-            var districtList = unitOfWork.DistrictRepository.Get(b => b.SalesmanID == user.AccountID).ToList();
-            for (int i = 0; i < districtList.Count; i++)
-            {
-                for (int j = 0; j < districtList[i].Drugstores.Count; j++)
-                {
-                    var item = districtList[i].Drugstores.ElementAt(j);
-                    if (item.Account != null && item.Account.IsPending == true)
-                    {
-                        accountList.Add(item.Account);
-                    }
-                }
-            }
-            //var accountList =
-            //    unitOfWork.AccountRepository.Get(
-            //        b => b.RoleID == 4 && b.IsPending == true && b.IsActive == true);
-            //var drugstoreList = unitOfWork.DrugStoreRepository.Get(b => b.OwnerID != null && b.ApprovedByStaffID == null);
+            ////var accountList =
+            ////    unitOfWork.AccountRepository.Get(
+            ////        b => b.RoleID == 4 && b.IsPending == true && b.IsActive == true);
+            ////var drugstoreList = unitOfWork.DrugStoreRepository.Get(b => b.OwnerID != null && b.ApprovedByStaffID == null);
             return View(accountList);
         }
         //public ActionResult Mapping()

@@ -67,6 +67,7 @@ namespace DMS.Controllers
                     orderDetails = new DrugOrderDetail();
                     orderDetails.DrugId = cartList[i].Drug.DrugID;
                     orderDetails.Quantity = cartList[i].Quantity;
+                    orderDetails.DeliveryQuantity = cartList[i].Quantity;
                     orderDetails.UnitID = cartList[i].Unit.UnitId;
                     orderDetails.UnitPrice = cartList[i].Drug.Prices.Where(b => b.UnitID == orderDetails.UnitID).Select(b => b.UnitPrice).SingleOrDefault() * orderDetails.Quantity *
                         (100 - cartList[i].Drug.DiscountRates.Where(b => b.DrugstoreTypeID == drugstore.DrugstoreTypeID).Select(b => b.Discount).SingleOrDefault()) / 100;
