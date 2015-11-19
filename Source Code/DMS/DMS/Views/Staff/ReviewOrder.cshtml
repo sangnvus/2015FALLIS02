@@ -165,7 +165,7 @@
                                                             <input id="hidden-@item.DrugOrderDetailsID" type="hidden" value="@item.Quantity" />
                                                         </td>
                                                         <td>
-                                                            <input id="@item.DrugOrderDetailsID" type="text" class="form-control note" />
+                                                            <input id="@item.DrugOrderDetailsID" value="@item.Note" type="text" class="form-control note" />
                                                         </td>
                                                     </tr>
                                                 }
@@ -214,6 +214,24 @@
                 alert("Xin nhập lại số lượng");
             }
         });
+        $(".note").on("change", function () {
+                var detailsID = $(this).attr("id");
+                var note = $(this).val();
+                //var oldQuantity = $("#hidden-" + detailsID).val();
+                //var unitPrice = $("#price-" + detailsID).text().trim().split(",").join("");
+                //var totalPrice = parseFloat($("#total-value").text().trim().split(",").join("")) + parseFloat((quantity - oldQuantity) * unitPrice);
+                //totalPrice = numeral(totalPrice).format('0,0');
+                //var oldQuantity = $("#hidden-" + detailsID).val();
+                $.ajax({
+                    url: '@Url.Action("UpdateNote", "Staff")',
+                    method: 'POST',
+                    data: { "drugorderDetailsID": detailsID, "note": note }
+                }).done(function (data) {
+                }).fail(function (xhr) {
+                    alert("Có lỗi xảy ra!!!");
+                });
+        });
+
     });
 </script>
 <script src="~/assets/js/numeral.js"></script>

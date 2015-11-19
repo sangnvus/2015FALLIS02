@@ -85,14 +85,15 @@ namespace DMS.Controllers
             var salesman = (Account)Session["User"];
             var salesmanID = salesman.AccountID;
             var listDrugstoreID = unitOfWork.DrugStoreRepository.Get(s => s.District.SalesmanID == salesmanID);
-            var listOrder = new List<DrugOrder>();
-            for (int i = 0; i < listDrugstoreID.Count(); i++)
-            {
-                var drugstoreID = listDrugstoreID.ElementAt(i).DrugstoreID;
-                var orders = unitOfWork.DrugOrderRepository.Get(a => a.DrugstoreID == drugstoreID);
-                listOrder.AddRange(orders);
-            }
-            return View(listOrder);
+            //var listOrder = new List<DrugOrder>();
+            //for (int i = 0; i < listDrugstoreID.Count(); i++)
+            //{
+            //    var drugstoreID = listDrugstoreID.ElementAt(i).DrugstoreID;
+            //    var orders = unitOfWork.DrugOrderRepository.Get(a => a.DrugstoreID == drugstoreID);
+            //    listOrder.AddRange(orders);
+            //}
+            var orders = unitOfWork.DrugOrderRepository.Get(a => a.SalesmanID == salesmanID);
+            return View(orders);
         }
 
         [HttpPost]
@@ -341,6 +342,7 @@ namespace DMS.Controllers
                 order.IsActive = true;
 
                 order.Status = (int)Status.StatusEnum.NotApprove;
+                order.SalesmanID = drugstore.District.SalesmanID;
                 bool check = unitOfWork.DrugOrderRepository.Insert(order);
                 unitOfWork.DrugOrderRepository.SaveChanges();
                 unitOfWork.DrugOrderDetailRepository.SaveChanges();
@@ -353,6 +355,12 @@ namespace DMS.Controllers
                 }
             }
             return RedirectToAction("SalesmanCart", new { drugstoreID = (int)Session["DrugStoreID"] });
+        }
+        public ActionResult OrderDetails(int orderID)
+        {
+            var drugsOrder = unitOfWork.DrugOrderRepository.GetByID(orderID);
+            Session["DrugsOrderDetails"] = drugsOrder.DrugOrderDetails.ToList();
+            return View(drugsOrder);
         }
     }
 

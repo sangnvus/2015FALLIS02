@@ -82,6 +82,7 @@ namespace DMS.Controllers
                 order.IsActive = true;
                 order.Note = note;
                 order.Status = (int)Status.StatusEnum.NotApprove;
+                order.SalesmanID = drugstore.District.SalesmanID;
                 bool check = unitOfWork.DrugOrderRepository.Insert(order);
                 unitOfWork.DrugOrderRepository.SaveChanges();
                 unitOfWork.DrugOrderDetailRepository.SaveChanges();

@@ -60,7 +60,7 @@
                                         <td>@String.Format("{0:0,0}", @item.TotalPrice)</td>
                                         <td id="delete-@item.DrugOrderID">@if (item.Status == 1 || item.Status == 2)
                                                                           {
-                                            <a id="delete" data-id="@item.DrugOrderID">Hủy đơn hàng</a>
+                                            <a class="btn btn-danger" id="delete" data-id="@item.DrugOrderID">Hủy đơn hàng</a>
                                                                           }</td>
                                     </tr>
                                     }

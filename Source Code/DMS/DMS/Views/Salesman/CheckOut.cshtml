@@ -31,10 +31,10 @@
                                             <label>số điện thoại </label>
                                             <input class="le-input" value="@user.AccountProfile.Phone">
                                         </div>
-                                        <div class="col-xs-12 col-sm-4">
+                                        @*<div class="col-xs-12 col-sm-4">
                                             <label>địa chỉ email</label>
                                             <input class="le-input" value="@user.AccountProfile.Email">
-                                        </div>
+                                        </div>*@
 
                                         @*<div class="col-xs-12 col-sm-4">
                             <label></label>
@@ -74,7 +74,7 @@
                                     var cartSession = (List<@Cart>)Session["Cart"];
                                     var drugstoreTypeID = int.Parse(Session["DrugStoreTypeID"].ToString());
                                     int quantity = 0;
-                                    float totalPrice = 0;
+                                    double totalPrice = 0;
                                     for (int i = 0; i < cartSession.Count; i++)
                                     {
                                         var price = 0.0;
@@ -84,12 +84,12 @@
                                             price = cartSession[i].Price.UnitPrice;
                                         }
                                         var actualValue = (100 - double.Parse(cartSession[i].Drug.DiscountRates.Where(b => b.DrugstoreTypeID == drugstoreTypeID).Select(d => d.Discount).SingleOrDefault().ToString())) / 100;
-                                        totalPrice = (float)(cartSession[i].Quantity * price * actualValue + totalPrice);
+                                        totalPrice = (double)(cartSession[i].Quantity * price * actualValue + totalPrice);
                                     }
                                     <ul class="tabled-data inverse-bold no-border">
                                         <li>
                                             <label>Tổng cộng đơn hàng:</label>
-                                            <div class="value ">@totalPrice VND</div>
+                                            <div class="value ">@String.Format("{0:0,0}", @totalPrice) VND</div>
                                         </li>
                                         <li>
                                             <label>Giao hàng:</label>
@@ -108,7 +108,7 @@
                                         <li>
 
                                             <label>Tổng cộng tất cả:</label>
-                                            <div class="value">@totalPrice VND</div>
+                                            <div class="value">@String.Format("{0:0,0}", @totalPrice) VND</div>
 
 
 
@@ -136,7 +136,7 @@
                                                 <th>Stt</th>
                                                 <th>Tên thuốc</th>
                                                 <th>Loại thuốc</th>
-                                                <th>Hãng</th>
+                                                @*<th>Hãng</th>*@
                                                 <th>Giá</th>
                                                 <th>Đơn vị</th>
                                                 <th>Số lượng</th>
@@ -159,7 +159,7 @@
                                                 <tr id="@item.Drug.DrugID">
                                                     <td>@i</td>
                                                     <td>@item.Drug.DrugName</td>
-                                                    <td>@item.Drug.DrugCompany.DrugCompanyName</td>
+                                                    @*<td>@item.Drug.DrugCompany.DrugCompanyName</td>*@
                                                     <td>@item.Drug.DrugType.DrugTypeName</td>
                                                     <td>
                                                         <div id="price-@item.Drug.DrugID" class="price-number">

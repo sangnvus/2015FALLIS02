@@ -1079,13 +1079,15 @@ namespace DMS.Controllers
         }
         public JsonResult UpdateNote(int drugorderDetailsID,  string note)
         {
+            var result = false;
             if (Session["DrugsOrderDetails"] != null)
             {
                 var drugsOrderDetails = (List<DrugOrderDetail>)Session["DrugsOrderDetails"];
                 drugsOrderDetails.Single(b => b.DrugOrderDetailsID == drugorderDetailsID).Note = note;
                 Session["DrugsOrderDetails"] = drugsOrderDetails;
+                result = true;
             }
-            return new JsonResult();
+            return Json(result);
         }
         public ActionResult ApproveOrder(int id)
         {
@@ -1110,6 +1112,12 @@ namespace DMS.Controllers
             unitOfWork.DrugOrderRepository.Update(order);
             unitOfWork.DrugOrderRepository.SaveChanges();
             return RedirectToAction("ListOrderNotApprove", "Staff");
+        }
+        public ActionResult OrderDetails(int orderID)
+        {
+            var drugsOrder = unitOfWork.DrugOrderRepository.GetByID(orderID);
+            Session["DrugsOrderDetails"] = drugsOrder.DrugOrderDetails.ToList();
+            return View(drugsOrder);
         }
 
         

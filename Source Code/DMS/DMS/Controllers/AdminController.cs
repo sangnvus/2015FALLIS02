@@ -29,12 +29,20 @@ namespace DMS.Controllers
         }
         public ActionResult Index()
         {
-            return View();
+            if (Session["User"] != null)
+            {
+                return View();
+            }
+            return RedirectToAction("Index", "Home");
         }
         
         public ActionResult ManageStaff()
         {
-            return View();
+            if (Session["User"] != null)
+            {
+                return View();
+            }
+            return RedirectToAction("Index", "Home");
         }
 
         public ActionResult ListStaff()
@@ -125,7 +133,11 @@ namespace DMS.Controllers
         }
         public ActionResult CreateStaff()
         {
-            return View();
+            if (Session["User"] != null)
+            {
+                return View();
+            }
+            return RedirectToAction("Index", "Home");
         }
 
         public ActionResult CreateNewSalesman(string username, string password, string fullname, string address, string phonenumber, string coordinate, string email)
@@ -151,7 +163,11 @@ namespace DMS.Controllers
         }
         public ActionResult CreateSalesman()
         {
-            return View();
+            if (Session["User"] != null)
+            {
+                return View();
+            }
+            return RedirectToAction("Index", "Home");
         }
 
         public JsonResult CreateNewDelivery(string fullname, string address, string phonenumber)
@@ -170,7 +186,11 @@ namespace DMS.Controllers
 
         public ActionResult CreateDelivery()
         {
-            return View();
+            if (Session["User"] != null)
+            {
+                return View();
+            }
+            return RedirectToAction("Index", "Home");
         }
 
         public ActionResult EditDelivery(int id)

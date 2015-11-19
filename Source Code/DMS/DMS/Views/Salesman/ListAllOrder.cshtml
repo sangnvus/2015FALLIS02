@@ -35,7 +35,8 @@
                                 {
                                 <tr>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.DrugOrderID)
+                                        @Html.DisplayFor(modelItem => item.DrugOrderID)<br/>
+                                        @Html.ActionLink("Xem chi tiết", "OrderDetails",new{  orderID = item.DrugOrderID})
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Drugstore.DrugstoreName)

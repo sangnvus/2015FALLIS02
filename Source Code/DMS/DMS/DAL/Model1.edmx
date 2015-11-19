@@ -113,6 +113,7 @@
           <Property Name="DateOrder" Type="datetime" />
           <Property Name="IsActive" Type="bit" />
           <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="SalesmanID" Type="int" />
         </EntityType>
         <EntityType Name="DrugOrderDetails">
           <Key>
@@ -801,6 +802,7 @@
           <Property Name="DateOrder" Type="DateTime" Precision="3" />
           <Property Name="IsActive" Type="Boolean" />
           <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="SalesmanID" Type="Int32" />
           <NavigationProperty Name="DeliveryScheduleDetails" Relationship="DMSModel.FK_DeliveryScheduleDetails_DrugOrder" FromRole="DrugOrder" ToRole="DeliveryScheduleDetail" />
           <NavigationProperty Name="Drugstore" Relationship="DMSModel.FK_DrugOrder_Drugstore" FromRole="DrugOrder" ToRole="Drugstore" />
           <NavigationProperty Name="DrugOrderDetails" Relationship="DMSModel.FK_DrugOrderDetails_DrugOrder" FromRole="DrugOrder" ToRole="DrugOrderDetail" />
@@ -1278,6 +1280,7 @@
           <EntitySetMapping Name="DrugOrders">
             <EntityTypeMapping TypeName="DMSModel.DrugOrder">
               <MappingFragment StoreEntitySet="DrugOrder">
+                <ScalarProperty Name="SalesmanID" ColumnName="SalesmanID" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />
                 <ScalarProperty Name="DateOrder" ColumnName="DateOrder" />

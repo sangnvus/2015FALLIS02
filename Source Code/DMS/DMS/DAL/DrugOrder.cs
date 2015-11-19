@@ -27,6 +27,7 @@ namespace DMS.DAL
         public Nullable<System.DateTime> DateOrder { get; set; }
         public Nullable<bool> IsActive { get; set; }
         public int Status { get; set; }
+        public Nullable<int> SalesmanID { get; set; }
     
         public virtual ICollection<DeliveryScheduleDetail> DeliveryScheduleDetails { get; set; }
         public virtual Drugstore Drugstore { get; set; }
