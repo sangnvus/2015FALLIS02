@@ -34,7 +34,7 @@
                                         <strong>Loại thuốc:</strong>
                                     </td>
                                     <td>
-                                        @Html.DropDownList("DrugTypeID", "--Chọn--")
+                                        @Html.DropDownList("DrugTypeID")
                                     </td>
                                 </tr>
                                 <tr>
@@ -42,7 +42,8 @@
                                         <strong>Tên thuốc: </strong>
                                     </td>
                                     <td>
-                                        @Html.EditorFor(model => model.DrugName)
+                                        @Html.TextBoxFor(model => model.DrugName, new { maxlength = "100",required = "required", @class = "form-control", style = "width:500px" })
+                                        @*@Html.EditorFor(model => model.DrugName, new { maxlength="100"})*@
                                     </td>
                                 </tr>
                                 <tr>
@@ -51,7 +52,7 @@
                                     </td>
                                     <td>
 
-                                        @Html.TextArea("Description", new { @class = "ckeditor", @id = "Description" })
+                                        @Html.TextArea("Description", new { @class = "ckeditor", required = "required", @id = "Description" })
 @*                                        @Html.ValidationMessageFor(model => model.Description)*@
                                     </td>
                                 </tr>
@@ -60,7 +61,7 @@
                                         <strong>Đơn giá</strong>
                                     </td>
                                     <td>
-                                        <input type="text" id="price-package" name="price-package"/> / Thùng
+                                        <input type="number" maxlength="10" id="price-package" required="required" name="price-package" /> / Thùng
                                     </td>
                                 </tr>
                                 <tr>
@@ -68,7 +69,7 @@
                                         
                                     </td>
                                     <td>
-                                        <input type="text" id="price-box" name="price-box"/> /Hộp
+                                        <input type="number" maxlength="10" id="price-box" required="required" name="price-box" /> /Hộp
                                     </td>
                                 </tr>
                                 <tr>
@@ -76,7 +77,7 @@
                                         <strong>Chiết khấu cho nhà thuốc cỡ lớn</strong>
                                     </td>
                                     <td>
-                                        <input type="text" class="input-discount" name="big-discount" /> % 
+                                        <input type="text" maxlength="2" class="input-discount" required="required" name="big-discount" /> % 
                                     </td>
                                 </tr>
                                  <tr>
@@ -84,7 +85,7 @@
                                         <strong>Chiết khấu cho nhà thuốc cỡ vừa</strong>
                                     </td>
                                     <td>
-                                        <input type="text" class="input-discount" name="medium-discount"/> % 
+                                        <input type="text" maxlength="2" class="input-discount" required="required" name="medium-discount" /> % 
                                     </td>
                                 </tr>
                                 <tr>
@@ -92,7 +93,7 @@
                                         <strong>Chiết khấu cho nhà thuốc cỡ nhỏ</strong>
                                     </td>
                                     <td>
-                                        <input type="text" class="input-discount" name="small-discount"/> % 
+                                        <input type="text" maxlength="2" class="input-discount" required="required" name="small-discount" /> % 
                                     </td>
                                 </tr>
                                
@@ -101,7 +102,7 @@
                                         <strong>Hình ảnh:</strong>
                                     </td>
                                     <td>
-                                        <input type="file" name="file" id="file" style="width: 100%;" />
+                                        <input required="required" type="file" name="file" id="file" style="width: 100%;" />
                                     </td>
                                 </tr>
                                 @* <tr>

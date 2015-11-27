@@ -18,7 +18,7 @@
                 {
                     @Html.ValidationSummary(true)
                         <div class="editor-field">
-                            <strong>Tên loại thuốc: </strong>@Html.EditorFor(model => model.DrugTypeName)
+                            <strong>Tên loại thuốc: </strong>@Html.TextBoxFor(model => model.DrugTypeName, new { required = "required",maxlength="50" })
                             @Html.ValidationMessageFor(model => model.DrugTypeName)
                         </div>
                     <br/>

@@ -17,7 +17,32 @@
                     <strong>Số tiền thanh toán:</strong>
                 </td>
                 <td>
-                    <input type="text" id="amount" />
+                    <input type="number" id="amount" required="required" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>Số nợ còn lại</strong>
+                </td>
+                <td>
+                    <label id="current-debt"></label>
+                    VND         
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>Người thanh toán:</strong>
+                </td>
+                <td>
+                    <input type="text" id="name" required="required" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>Số điện thoại:</strong>
+                </td>
+                <td>
+                    <input type="number" id="phone-number" required="required" />
                 </td>
             </tr>
             <tr>
@@ -41,10 +66,12 @@
 </p>
  <table class="table display Keytable dataTable" id="tablePayment">
                             <thead>
-                                <th>Mã số hóa đơn</th>
+                                <th>Stt</th>
                                 <th>Số lượng</th>
-                                <th>Loại giao dịch</th>
+                                <th style="width: 100px">Loại giao dịch</th>
                                 <th>Cân bằng</th>
+                                <th style="width: 150px">Tên</th>
+                                <th>Số điện thoại</th>
                                 <th>Ngày</th>
                             </thead>
                             <tbody>
@@ -56,7 +83,8 @@
         if (Model.ElementAt(i).PaymentType == true)
         {
                                     <tr>
-                                        <td>@Model.ElementAt(i).PaymentID</td>
+                                        @*<td>@Model.ElementAt(i).PaymentID</td>*@
+                                        <td>@index</td>
                                         <td>
                                             <label style="margin-left: 10px; color: red"> @String.Format("{0:0,0}", @Model.ElementAt(i).Amount) VND</label>
                                         </td>
@@ -64,7 +92,9 @@
                                         <td>
                                             <label style="margin-left: 10px; color: red"> @String.Format("{0:0,0}", @Model.ElementAt(i).Balance) VND</label>
                                         </td>
-                                        <td>@Model.ElementAt(i).Date</td>
+                                        <td>@Model.ElementAt(i).FullName</td>
+                                        <td>@Model.ElementAt(i).PhoneNumber</td>
+                                        <td>@Model.ElementAt(i).Date.ToString("yyyy/MM/dd")</td>
                                     </tr>
         }
         else
@@ -78,7 +108,9 @@
                                         <td>
                                             <label style="margin-left: 10px; color: red">@String.Format("{0:0,0}", @Model.ElementAt(i).Balance) VND</label>
                                         </td>
-                                        <td>@Model.ElementAt(i).Date</td>
+                                        <td>@Model.ElementAt(i).FullName</td>
+                                        <td>@Model.ElementAt(i).PhoneNumber</td>
+                                        <td>@Model.ElementAt(i).Date.ToString("yyyy/MM/dd")</td>
                                     </tr>
         }
 
@@ -88,21 +120,42 @@
                         </table>
 <script type="text/javascript">
     window.onload = GetDebt();
+    $(document).ready(function() {
+        $("#amount").on("change", function () {
+            var current = 0;
+            if ($("#paymentType").val()==2) {
+                current = accounting.unformat($("#debt").text()) - accounting.unformat($("#amount").val());
+            } else {
+                current = accounting.unformat($("#debt").text()) + accounting.unformat($("#amount").val());
+            }
+            document.getElementById('current-debt').textContent = accounting.formatMoney(current, " ", 0);
+        });
+        $("#paymentType").on("change", function () {
+            $("#amount").val(0);
+            GetDebt();
+        });
+    });
     function Payment() {
         var DrugstoreID = $("#tableDS").attr("data-id");
         var Amount = document.getElementById('amount').value;
         var element = document.getElementById("paymentType");
         var PaymentType = element.options[element.selectedIndex].value;
-        $.ajax({
-            url: '/Staff/Payment',
-            method: 'POST',
-            data: { "amount": Amount, "DrugstoreID": DrugstoreID, "paymentType":PaymentType },
-            success: function (result) {
-                document.getElementById('amount').value = "";
-                GetDebt();
-                window.location.href = "/Staff/DrugstoreDetails/" + DrugstoreID;
-            }
-        });
+        var name = $("#name").val();
+        var phoneNumber = $("#phone-number").val();
+        if (Amount < 0 || Amount=="") {
+            alert("Xin hãy nhập số tiền thanh toán !");
+        } else {
+            $.ajax({
+                url: '/Staff/Payment',
+                method: 'POST',
+                data: { "amount": Amount, "DrugstoreID": DrugstoreID, "paymentType": PaymentType,"name":name,"phoneNumber":phoneNumber },
+                success: function (result) {
+                    document.getElementById('amount').value = "";
+                    GetDebt();
+                    window.location.href = "/Staff/DrugstoreDetails/" + DrugstoreID;
+                }
+            });
+        }
       //  GetDebt();
     }
     function GetDebt() {
@@ -112,7 +165,8 @@
             method: 'POST',
             data: { "DrugstoreID": DrugstoreID },
             success: function (result) {
-                document.getElementById('debt').textContent = accounting.formatMoney(result, " ", 0) ;
+                document.getElementById('debt').textContent = accounting.formatMoney(result, " ", 0);
+                document.getElementById('current-debt').textContent = accounting.formatMoney(result, " ", 0);
             }
         });
     }

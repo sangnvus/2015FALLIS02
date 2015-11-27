@@ -77,6 +77,16 @@ namespace DMS.Controllers
                 account.IsActive = false;
                 unitOfWork.AccountRepository.Update(account);
                 unitOfWork.AccountRepository.SaveChanges();
+                if (account.RoleID == 3)
+                {
+                    var listDistrict=unitOfWork.DistrictRepository.Get(b => b.SalesmanID == id);
+                    foreach (var district in listDistrict)
+                    {
+                        district.SalesmanID = null;
+                        unitOfWork.DistrictRepository.Update(district);
+                    }
+                    unitOfWork.DistrictRepository.SaveChanges();
+                }
                 return RedirectToAction("ManageStaff", "Admin");
             }
             else if(account.RoleID==4) {

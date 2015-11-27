@@ -98,7 +98,11 @@ namespace DMS.Controllers
                 drug.DiscountRates.Add(smallDiscountRate);
                 if (file != null)
                 {
-                    file.SaveAs(HttpContext.Server.MapPath("/assets/images/Drugs") + file.FileName);
+                    //file.SaveAs(HttpContext.Server.MapPath("/assets/images/Drugs") + file.FileName);
+                    string pic = System.IO.Path.GetFileName(file.FileName);
+                    string path = System.IO.Path.Combine(
+                                           Server.MapPath("~/assets/images/Drugs"), pic);
+                    file.SaveAs(path);
                     drug.ImageUrl = "/assets/images/Drugs/" + file.FileName;
 
                 }
@@ -630,10 +634,12 @@ namespace DMS.Controllers
             return Json(totalDebt, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult Payment(int DrugstoreID, string amount, string paymentType)
+        public ActionResult Payment(int DrugstoreID, string amount, string paymentType,string name,string phoneNumber)
         {
             var payment = new Payment();
             payment.DrugstoreID = DrugstoreID;
+            payment.FullName = name;
+            payment.PhoneNumber = phoneNumber;
             var paymentHistory = unitOfWork.PaymentRepository.Get(b => b.DrugstoreID == DrugstoreID).ToList();
             var drugstore = unitOfWork.DrugStoreRepository.Get(b => b.DrugstoreID == DrugstoreID).Single();
             //if (paymentHistory.Count() == 0)

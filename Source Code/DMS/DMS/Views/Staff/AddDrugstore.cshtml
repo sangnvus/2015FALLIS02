@@ -31,7 +31,7 @@
                                         <strong>Tên nhà thuốc:</strong>
                                     </td>
                                     <td>
-                                        @Html.EditorFor(model => model.DrugstoreName)
+                                        @Html.TextBoxFor(model => model.DrugstoreName, new { required = "required" })
                                     </td>
                                 </tr>
                                 <tr>
@@ -40,7 +40,7 @@
                                     </td>
                                     <td>
                                         <div id="location" onchange="decodeCoordinate()" >
-                                            @Html.EditorFor(model => model.Address)
+                                            @Html.TextBoxFor(model => model.Address, new { required = "required" })
                                         </div>
                                     </td>
                                 </tr>
@@ -50,7 +50,7 @@
                                     </td>
                                     <td>
                                         @Html.DropDownListFor(modelItem => City, new SelectList(City, "CityID", "CityName"), "---Chọn thành phố ---",
-                                                             new { @class = "form-control", style = "width:250px", id = "city" })
+                                                             new { @class = "form-control", style = "width:250px", id = "city",required="required" })
                                     </td>
                                 </tr>
                                 <tr>
