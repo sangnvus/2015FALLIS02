@@ -16,8 +16,9 @@
                     <h2 class="bordered">Tạo tài khoản </h2>
 
                     <form role="form" class="register-form cf-style-1">
-                        <label id="warning" style="color: red;display: none">-Xin hãy nhập đầy đủ những thông tin bắt buộc.</label>
-                        <label id="warning_1" style="color: red;display: none">-Không thể tìm thấy địa chỉ bạn vừa nhập.Xin vui lòng thử địa chỉ khác.</label>
+                        <label id="warning" style="color: red;display: none">-Xin hãy nhập đầy đủ những thông tin bắt buộc.</label><br/>
+                        <label id="email-notvalid" style="color: red;display: none">-Địa chỉ email không có thật.xin nhập lại địa chỉ email khác.</label><br />
+                        <label id="warning_1" style="color: red;display: none">-Không thể tìm thấy địa chỉ bạn vừa nhập.Xin vui lòng thử địa chỉ khác.</label><br />
                         <p>Thông tin cá nhân</p>
                         <div class="field-row">
                             <label>Email<span style="color: red">(*)</span></label>
@@ -81,6 +82,10 @@
 <!-- /.authentication -->
 <!-- ========================================= MAIN : END ========================================= -->
 <script type="text/javascript">
+    function isEmail(email) {
+        var emailReg = /^([\w-\.]+@@([\w-]+\.)+[\w-]{2,6})?$/;
+        return emailReg.test(email);
+    }
     function register() {
         //var username = $("#username").val();
         var username = "";
@@ -94,7 +99,15 @@
         var district = $("#district").val();
         if (coordinate == "") {
             $("#warning_1").css("display", "inline");
-        } else if (email.length > 0 && password.length > 0 && drugstoreName.length > 0 && drugstoreAddress.length > 0 && fullname.length > 0) {
+        }
+        if (coordinate != "") {
+            $("#warning_1").css("display", "none");
+        }
+        if (!isEmail(email)) {
+            $("#email-notvalid").css("display", "inline");
+        }
+        if (isEmail(email) && email.length > 0 && password.length > 0 && drugstoreName.length > 0 && drugstoreAddress.length > 0 && fullname.length > 0) {
+            $("#email-notvalid").css("display", "none");
             $.ajax({
                 url: '/Account/RegisterDrugstoreAccount',
                 method: 'POST',
@@ -125,7 +138,7 @@
             mapTypeId: google.maps.MapTypeId.ROADMAP
         };
         var map = new google.maps.Map(document.getElementById("map_canvas"),
-        mapOptions);
+            mapOptions);
 
     }
 
@@ -192,9 +205,9 @@
         $("#city").on("change", function () {
             var cityID = $("#city").val();
             $.ajax({
-                url:'@Url.Action("ListDistrict","Account")',
+                url: '@Url.Action("ListDistrict","Account")',
                 type: "POST",
-                data: { "cityId": cityID},
+                data: { "cityId": cityID },
             }).done(function (data) {
                 $("#district").empty();
                 for (var i = 0; i < data.length; i++) {

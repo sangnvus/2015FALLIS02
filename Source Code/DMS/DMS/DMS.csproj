@@ -1101,6 +1101,8 @@
     <Content Include="Views\Admin\CreateStaff.cshtml" />
     <Content Include="Views\Salesman\OrderDetails.cshtml" />
     <Content Include="Views\Staff\OrderDetails.cshtml" />
+    <Content Include="Views\Account\ForgetPassword.cshtml" />
+    <Content Include="Views\Account\ChangePassword.cshtml" />
     <None Include="Web.Debug.config" />
     <None Include="Web.Release.config" />
   </ItemGroup>

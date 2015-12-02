@@ -13,25 +13,28 @@
 <!-- ========================================= MAIN ========================================= -->
 <main id="authentication" class="inner-bottom-md">
 	<div class="container">
-		<div class="row">
-			<div class="col-md-6">
-				<section class="section sign-in inner-right-xs">
-					<h2 class="bordered">Đăng nhập</h2>
-					<p></p>
+	    <div class="row">
+	        <div class="col-md-3"></div>
+	        <div class="col-md-5">
+	            <section class="section sign-in inner-right-xs">
+	                <h2 class="bordered">Đăng nhập</h2>
+	                <p></p>
 
-					<div class="login-form cf-style-1">
-						<div class="field-row">
-                            <label>Tên Đăng Nhập</label>
-                            <input class="form-control" style="display: inline" placeholder="tên đăng nhập" id="Username" name="Username" type="text" autofocus="">
+	                <div class="login-form cf-style-1">
+	                    <div class="field-row">
+	                        <label>Email Đăng Nhập</label>
+	                        <input class="form-control" style="display: inline" placeholder="tên đăng nhập" id="Username" name="Username" type="text" autofocus="">
 
-                        </div><!-- /.field-row -->
+	                    </div><!-- /.field-row -->
 
-                        <div class="field-row">
-                            <label>Mật Khẩu</label>
-                            <input class="form-control" style="display: inline" placeholder="mật khẩu" id="Password" name="Password" type="password">
-                        </div><!-- /.field-row -->
-
-                        @*<div class="field-row clearfix">
+	                    <div class="field-row">
+	                        <label>Mật Khẩu</label>
+	                        <input class="form-control" style="display: inline" placeholder="mật khẩu" id="Password" name="Password" type="password">
+	                    </div><!-- /.field-row -->
+	                    <div class="field-row">
+                            <a class="content-color bold" href="@Url.Action("ForgetPassword", "Account")">Quên mật khẩu ?</a>
+	                    </div><!-- /.field-row -->
+	                    @*<div class="field-row clearfix">
                         	<span class="pull-left">
                         		<label class="content-color"><input type="checkbox" class="le-checbox auto-width inline"> <span class="bold">Remember me</span></label>
                         	</span>
@@ -40,15 +43,15 @@
                         	</span>
                         </div>*@
 
-                        <div class="buttons-holder">
-                            <input type="submit" value="Đăng nhập" class="le-button huge" onclick="CheckLogin()" />
-                            <input type="button" value="Đăng kí" class="le-button huge" onclick="window.location.href = '/Account/Register'" />
-                        </div><!-- /.buttons-holder -->
-					</div><!-- /.cf-style-1 -->
+	                    <div class="buttons-holder">
+	                        <input type="submit" value="Đăng nhập" class="le-button huge" onclick="CheckLogin()" />
+	                        <input type="button" value="Đăng kí" class="le-button huge" onclick="window.location.href = '/Account/Register'" />
+	                    </div><!-- /.buttons-holder -->
+	                </div><!-- /.cf-style-1 -->
 
-				</section><!-- /.sign-in -->
-			</div><!-- /.col -->
-		</div><!-- /.row -->
+	            </section><!-- /.sign-in -->
+	        </div><!-- /.col -->
+	    </div><!-- /.row -->
 	</div><!-- /.container -->
 </main>
 <!-- /.authentication -->
@@ -75,6 +78,7 @@
 </div>*@
 
 <script type="text/javascript">
+  
     function CheckLogin() {
         var username = document.getElementById('Username').value;
         var password = document.getElementById('Password').value;

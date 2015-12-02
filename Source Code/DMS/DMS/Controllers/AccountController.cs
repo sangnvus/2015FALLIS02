@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Web;
 using System.Web.Mvc;
 using DMS.DAL;
@@ -123,8 +125,8 @@ namespace DMS.Controllers
         public JsonResult ListDistrict(int cityId)
         {
             //var listDistrict = unitOfWork.DistrictRepository.Get(b=>b.CityID==cityId);
-            var listDistrict=( from b in unitOfWork.DistrictRepository.Get(b=>b.CityID==cityId)
-                               select new {b.DistrictID,b.DistrictName} ).ToList();
+            var listDistrict = (from b in unitOfWork.DistrictRepository.Get(b => b.CityID == cityId)
+                                select new { b.DistrictID, b.DistrictName }).ToList();
             return Json(listDistrict);
         }
         public ActionResult RegisterResult(string drugstoreName, string drugstoreAddress)
@@ -302,6 +304,85 @@ namespace DMS.Controllers
             Session["User"] = null;
             Session["DrugStoreTypeID"] = null;
             return RedirectToAction("Index", "Home");
+        }
+        public ActionResult ForgetPassword()
+        {
+            return View();
+        }
+        public JsonResult GetPassword(string email)
+        {
+            var users = unitOfWork.AccountRepository.Get(b => b.Email == email).SingleOrDefault();
+            var result = false;
+            if (users != null)
+            {
+                result = true;
+                var password = RandomString(6);
+                var emailContent = "Mật khẩu của bạn là :" + password;
+                SendMail(email, "Lấy lại mật khẩu", emailContent);
+                users.Password = md5(password);
+                unitOfWork.AccountRepository.Update(users);
+                unitOfWork.AccountRepository.SaveChanges();
+                return Json(result);
+            }
+            return Json(result);
+        }
+        private void SendMail(string diachinhan, string tieude, string noidung)
+        {
+            string EmailAddress = "truongvothienvu92@gmail.com";
+            string Password = "thienvu3230";
+            MailMessage mailMessage = new MailMessage(EmailAddress, diachinhan);
+            mailMessage.Subject = tieude;
+            mailMessage.Body = noidung;
+            mailMessage.IsBodyHtml = true;
+            mailMessage.BodyEncoding = UTF8Encoding.UTF8;
+
+            SmtpClient smtpClient = new SmtpClient();
+            smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
+            smtpClient.EnableSsl = true;
+            smtpClient.Host = "smtp.gmail.com";
+            smtpClient.Port = 587;
+            smtpClient.UseDefaultCredentials = false;
+            smtpClient.Credentials = new System.Net.NetworkCredential()
+            {
+                UserName = EmailAddress,
+                Password = Password
+            };
+            //smtpClient.DeliveryMethod = SmtpDeliveryMethod.PickupDirectoryFromIis;
+            //smtpClient.DeliveryMethod = System.Net.Mail.SmtpDeliveryMethod.Network;
+            //smtpClient.Timeout = 20000;
+            smtpClient.ServicePoint.MaxIdleTime = 1000;
+            smtpClient.Send(mailMessage);
+            mailMessage.Dispose();
+            smtpClient.Dispose();
+        }
+        public static string RandomString(int length)
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            var random = new Random();
+            return new string(Enumerable.Repeat(chars, length)
+              .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+        public ActionResult ChangePassword()
+        {
+            return View();
+        }
+        public JsonResult DoChangePassword(string oldPassword,string newPassword)
+        {
+            var result = false;
+            if (Session["User"]!=null)
+            {
+                var user = (Account)Session["User"];
+                if (user.Password == (md5(oldPassword)))
+                {
+                    var account = unitOfWork.AccountRepository.Get(b => b.AccountID == user.AccountID).SingleOrDefault();
+                    account.Password = md5(newPassword);
+                    unitOfWork.AccountRepository.Update(account);
+                    unitOfWork.AccountRepository.SaveChanges();
+                    result = true;
+                    return Json(result);
+                }
+            }
+            return Json(result);
         }
     }
 }
