@@ -72,8 +72,8 @@
                             <div id="subtotal-holder">
                                 <ul class="tabled-data inverse-bold no-border">
                                     <li>
-                                        <label>Tổng cộng đơn hàng:</label> 
-                                        <div class="value"> <spans id="value">@String.Format("{0:0,0}", Model.TotalPrice)</spans> VND</div> 
+                                        <label>Tổng cộng đơn hàng:</label>
+                                        <div class="value"> <spans id="value">@String.Format("{0:0,0}", Model.TotalPrice)</spans> VND</div>
                                     </li>
                                     <li>
                                         <label>Giao hàng:</label>
@@ -91,16 +91,16 @@
                                 <ul id="total-field" class="tabled-data inverse-bold ">
                                     <li>
                                         <label>Tổng cộng tất cả:</label>
-                                        <div class="value"><span id="total-value">@String.Format("{0:0,0}", Model.TotalPrice)</span> VND</div> 
+                                        <div class="value"><span id="total-value">@String.Format("{0:0,0}", Model.TotalPrice)</span> VND</div>
                                     </li>
                                 </ul>
                                 <!-- /.tabled-data -->
                             </div>
                             <!-- /#subtotal-holder -->
                             <div class="place-order-button">
-                                <a href="@Url.Action("ApproveOrder", "Staff",new {id=Model.DrugOrderID})"class="le-button big">xác nhận</a>
+                                <a href="@Url.Action("ApproveOrder", "Staff",new {id=Model.DrugOrderID})" class="le-button big">xác nhận</a>
                                 <a href="@Url.Action("CancelOrder", "Staff")" style="background-color: red;" class="le-button big">Hủy bỏ</a>
-                                 @*<a href="@Url.Action("ListOrderNotApprove", "Staff")" style="background-color: green" class="le-button big">trở lại</a>*@
+                                @*<a href="@Url.Action("ListOrderNotApprove", "Staff")" style="background-color: green" class="le-button big">trở lại</a>*@
                             </div>
                         </div>
                         <!-- /.col -->
@@ -161,7 +161,7 @@
                                                             <span id="quantity-@item.DrugOrderDetailsID">@item.Quantity</span>
                                                         </td>
                                                         <td>
-                                                            <input id="@item.DrugOrderDetailsID" type="text" class="form-control delivery-quantity" value="@item.Quantity" />
+                                                            <input id="@item.DrugOrderDetailsID" type="number" min="0" max="9999" class="form-control delivery-quantity" value="@item.Quantity" />
                                                             <input id="hidden-@item.DrugOrderDetailsID" type="hidden" value="@item.Quantity" />
                                                         </td>
                                                         <td>
@@ -193,43 +193,50 @@
     $(document).ready(function () {
         $(".delivery-quantity").on("change", function () {
             if (!isNaN($(this).val())) {
-            var detailsID=$(this).attr("id");
-            var quantity = $(this).val();
-            var oldQuantity = $("#hidden-" + detailsID).val();
-            var unitPrice = $("#price-" + detailsID).text().trim().split(",").join("");
-            var totalPrice = parseFloat($("#total-value").text().trim().split(",").join("")) + parseFloat((quantity - oldQuantity) * unitPrice);
-            totalPrice = numeral(totalPrice).format('0,0');
-            $.ajax({
-                url: '@Url.Action("UpdateDeliveryQuantity","Staff")',
-                method: 'POST',
-                data: { "drugorderDetailsID": detailsID, "deliveryQuantity": quantity }
-            }).done(function (data) {
-                $("#hidden-" + detailsID).val(quantity);
-                $("#total-value").text(totalPrice);
-                $("#value").text(totalPrice);
-            }).fail(function (xhr) {
-                alert("Có lỗi xảy ra!!!");
-            });
+                var detailsID = $(this).attr("id");
+                var quantity = $(this).val();
+                var oldQuantity = $("#hidden-" + detailsID).val();
+                var unitPrice = $("#price-" + detailsID).text().trim().split(",").join("");
+                var totalPrice = parseFloat($("#total-value").text().trim().split(",").join("")) + parseFloat((quantity - oldQuantity) * unitPrice);
+                totalPrice = numeral(totalPrice).format('0,0');
+                if (parseInt(quantity) > 9999) {
+                    alert("Một sản phẩm không được đặt quá 9999 cái !");
+                    $(this).val(oldQuantity);
+                }
+                if (quantity != '' && parseInt(quantity) < 9999 && $(this).val().length < 4) {
+                    $.ajax({
+                        url: '@Url.Action("UpdateDeliveryQuantity", "Staff")',
+                        method: 'POST',
+                        data: { "drugorderDetailsID": detailsID, "deliveryQuantity": quantity }
+                    }).done(function (data) {
+                        $("#hidden-" + detailsID).val(quantity);
+                        $("#total-value").text(totalPrice);
+                        $("#value").text(totalPrice);
+                    }).fail(function (xhr) {
+                        alert("Có lỗi xảy ra!!!");
+                    });
+                }
+
             } else {
                 alert("Xin nhập lại số lượng");
             }
         });
         $(".note").on("change", function () {
-                var detailsID = $(this).attr("id");
-                var note = $(this).val();
-                //var oldQuantity = $("#hidden-" + detailsID).val();
-                //var unitPrice = $("#price-" + detailsID).text().trim().split(",").join("");
-                //var totalPrice = parseFloat($("#total-value").text().trim().split(",").join("")) + parseFloat((quantity - oldQuantity) * unitPrice);
-                //totalPrice = numeral(totalPrice).format('0,0');
-                //var oldQuantity = $("#hidden-" + detailsID).val();
-                $.ajax({
-                    url: '@Url.Action("UpdateNote", "Staff")',
-                    method: 'POST',
-                    data: { "drugorderDetailsID": detailsID, "note": note }
-                }).done(function (data) {
-                }).fail(function (xhr) {
-                    alert("Có lỗi xảy ra!!!");
-                });
+            var detailsID = $(this).attr("id");
+            var note = $(this).val();
+            //var oldQuantity = $("#hidden-" + detailsID).val();
+            //var unitPrice = $("#price-" + detailsID).text().trim().split(",").join("");
+            //var totalPrice = parseFloat($("#total-value").text().trim().split(",").join("")) + parseFloat((quantity - oldQuantity) * unitPrice);
+            //totalPrice = numeral(totalPrice).format('0,0');
+            //var oldQuantity = $("#hidden-" + detailsID).val();
+            $.ajax({
+                url: '@Url.Action("UpdateNote", "Staff")',
+                method: 'POST',
+                data: { "drugorderDetailsID": detailsID, "note": note }
+            }).done(function (data) {
+            }).fail(function (xhr) {
+                alert("Có lỗi xảy ra!!!");
+            });
         });
 
     });

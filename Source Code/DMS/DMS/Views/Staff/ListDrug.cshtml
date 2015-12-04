@@ -20,7 +20,7 @@
                         <thead>
                             <tr>
                                 <th>Tên thuốc         </th>
-                                <th>Tên công ty        </th>
+                                @*<th>Tên công ty        </th>*@
                                 <th>Loại thuốc        </th>
                                 
                                 <th>Giá            </th>
@@ -35,10 +35,9 @@
                                         @*@Html.DisplayFor(modelItem => item.DrugName)*@
                                         @Html.ActionLink(@item.DrugName, "EditDrug", new { id = item.DrugID }) 
                                     </td>
-                                    <td>
+                                    @*<td>
                                         @Html.DisplayFor(modelItem => item.DrugCompany.DrugCompanyName)
-                                        
-                                    </td>
+                                    </td>*@
                                     <td>
                                         @Html.DisplayFor(modelItem => item.DrugType.DrugTypeName)
                                     </td>

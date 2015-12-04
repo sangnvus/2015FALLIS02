@@ -54,7 +54,7 @@ namespace DMS.Controllers
             if (Session["Email"] != null && Session["UserRole"].ToString().Equals("Staff"))
             {
                 //ViewBag.DrugCompanyID = new SelectList(unitOfWork.DrugCompanyRepository.GetAll(), "DrugCompanyID", "DrugCompanyName");
-                ViewBag.DrugTypeID = new SelectList(unitOfWork.DrugTypeRepository.GetAll(), "DrugTypeID", "DrugTypeName");
+                ViewBag.DrugTypeID = new SelectList(unitOfWork.DrugTypeRepository.Get(b=>b.IsActive==true), "DrugTypeID", "DrugTypeName");
                 return View();
             }
             return RedirectToAction("Index", "Home");
