@@ -171,6 +171,11 @@ namespace DMS.Controllers
             ////    unitOfWork.AccountRepository.Get(
             ////        b => b.RoleID == 4 && b.IsPending == true && b.IsActive == true);
             ////var drugstoreList = unitOfWork.DrugStoreRepository.Get(b => b.OwnerID != null && b.ApprovedByStaffID == null);
+            var salesman = (Account)Session["User"];
+            var salesmanID = salesman.AccountID;
+            var listDrugstore = unitOfWork.DrugStoreRepository.Get(d => d.District.SalesmanID == salesmanID && d.Account != null && d.Account.IsPending == true
+                && d.Account.IsActive == true).ToList();
+            accountList = listDrugstore.Select(b => b.Account).ToList();
             return View(accountList);
         }
         //public ActionResult Mapping()
