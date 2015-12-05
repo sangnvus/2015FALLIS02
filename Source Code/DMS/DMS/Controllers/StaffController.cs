@@ -116,7 +116,7 @@ namespace DMS.Controllers
                 Console.WriteLine(e.Message);
             }
 
-            return RedirectToAction("CreateDrug");
+            return RedirectToAction("ListDrug");
         }
 
         //
@@ -1113,8 +1113,8 @@ namespace DMS.Controllers
                     totalPrice =totalPrice+ listOrderDeitals[i].DeliveryQuantity*listOrderDeitals[i].UnitPrice;
                 }
                 Session["DrugsOrderDetails"] = null;
+                order.TotalPrice = totalPrice.Value;
             }
-            order.TotalPrice = totalPrice.Value;
             unitOfWork.DrugOrderRepository.Update(order);
             unitOfWork.DrugOrderRepository.SaveChanges();
             return RedirectToAction("ListOrderNotApprove", "Staff");

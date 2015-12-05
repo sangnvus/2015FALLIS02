@@ -18,6 +18,7 @@ namespace DMS.DAL
         {
             this.Districts = new HashSet<District>();
             this.Drugstores = new HashSet<Drugstore>();
+            this.DrugOrders = new HashSet<DrugOrder>();
         }
     
         public int AccountID { get; set; }
@@ -32,5 +33,6 @@ namespace DMS.DAL
         public virtual Role Role { get; set; }
         public virtual ICollection<District> Districts { get; set; }
         public virtual ICollection<Drugstore> Drugstores { get; set; }
+        public virtual ICollection<DrugOrder> DrugOrders { get; set; }
     }
 }

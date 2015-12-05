@@ -19,7 +19,7 @@
                     <table class="display" id="TableDrug">
                         <thead>
                             <tr>
-                                <th>Mã số       </th>
+                                <th>Stt      </th>
                                 <th>Nhà thuốc        </th>
                                 <th>Nội dung      </th>
                                 <th>Ngày yêu cầu</th>
@@ -31,11 +31,13 @@
                         <tbody>
                             @if (Model != null)
                             {
+                                int i = 0;
                                 foreach (var item in Model)
                                 {
+                                    i++;
                                 <tr>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.DrugOrderID)
+                                        @i
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Drugstore.DrugstoreName)
@@ -47,7 +49,8 @@
                                         }
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.DateOrder)
+                                        @item.DateOrder.Value.ToString("dd/mm/yyyy")
+                                        @*@Html.DisplayFor(modelItem => item.DateOrder.Value.ToString("dd/mm/yyyy"))*@
                                     </td>
                                     <td>
                                         @*@Html.DisplayFor(modelItem => item.TotalPrice)*@

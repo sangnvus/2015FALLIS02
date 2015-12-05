@@ -32,5 +32,6 @@ namespace DMS.DAL
         public virtual ICollection<DeliveryScheduleDetail> DeliveryScheduleDetails { get; set; }
         public virtual Drugstore Drugstore { get; set; }
         public virtual ICollection<DrugOrderDetail> DrugOrderDetails { get; set; }
+        public virtual Account Account { get; set; }
     }
 }

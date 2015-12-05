@@ -348,6 +348,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_DrugOrder_Account">
+          <End Role="Account" Type="Self.Account" Multiplicity="0..1" />
+          <End Role="DrugOrder" Type="Self.DrugOrder" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Account">
+              <PropertyRef Name="AccountID" />
+            </Principal>
+            <Dependent Role="DrugOrder">
+              <PropertyRef Name="SalesmanID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_DrugOrder_Drugstore">
           <End Role="Drugstore" Type="Self.Drugstore" Multiplicity="1" />
           <End Role="DrugOrder" Type="Self.DrugOrder" Multiplicity="*" />
@@ -525,6 +537,10 @@
             <End Role="DrugType" EntitySet="DrugType" />
             <End Role="Drug" EntitySet="Drug" />
           </AssociationSet>
+          <AssociationSet Name="FK_DrugOrder_Account" Association="Self.FK_DrugOrder_Account">
+            <End Role="Account" EntitySet="Account" />
+            <End Role="DrugOrder" EntitySet="DrugOrder" />
+          </AssociationSet>
           <AssociationSet Name="FK_DrugOrder_Drugstore" Association="Self.FK_DrugOrder_Drugstore">
             <End Role="Drugstore" EntitySet="Drugstore" />
             <End Role="DrugOrder" EntitySet="DrugOrder" />
@@ -671,6 +687,10 @@
             <End Role="Unit" EntitySet="Units" />
             <End Role="Price" EntitySet="Prices" />
           </AssociationSet>
+          <AssociationSet Name="FK_DrugOrder_Account" Association="DMSModel.FK_DrugOrder_Account">
+            <End Role="Account" EntitySet="Accounts" />
+            <End Role="DrugOrder" EntitySet="DrugOrders" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Account">
           <Key>
@@ -687,6 +707,7 @@
           <NavigationProperty Name="Role" Relationship="DMSModel.FK_Account_Role" FromRole="Account" ToRole="Role" />
           <NavigationProperty Name="Districts" Relationship="DMSModel.FK_District_Account" FromRole="Account" ToRole="District" />
           <NavigationProperty Name="Drugstores" Relationship="DMSModel.FK_Drugstore_Account" FromRole="Account" ToRole="Drugstore" />
+          <NavigationProperty Name="DrugOrders" Relationship="DMSModel.FK_DrugOrder_Account" FromRole="Account" ToRole="DrugOrder" />
         </EntityType>
         <EntityType Name="AccountProfile">
           <Key>
@@ -806,6 +827,7 @@
           <NavigationProperty Name="DeliveryScheduleDetails" Relationship="DMSModel.FK_DeliveryScheduleDetails_DrugOrder" FromRole="DrugOrder" ToRole="DeliveryScheduleDetail" />
           <NavigationProperty Name="Drugstore" Relationship="DMSModel.FK_DrugOrder_Drugstore" FromRole="DrugOrder" ToRole="Drugstore" />
           <NavigationProperty Name="DrugOrderDetails" Relationship="DMSModel.FK_DrugOrderDetails_DrugOrder" FromRole="DrugOrder" ToRole="DrugOrderDetail" />
+          <NavigationProperty Name="Account" Relationship="DMSModel.FK_DrugOrder_Account" FromRole="DrugOrder" ToRole="Account" />
         </EntityType>
         <EntityType Name="DrugOrderDetail">
           <Key>
@@ -1162,6 +1184,18 @@
             </Principal>
             <Dependent Role="Price">
               <PropertyRef Name="UnitID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DrugOrder_Account">
+          <End Type="DMSModel.Account" Role="Account" Multiplicity="0..1" />
+          <End Type="DMSModel.DrugOrder" Role="DrugOrder" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Account">
+              <PropertyRef Name="AccountID" />
+            </Principal>
+            <Dependent Role="DrugOrder">
+              <PropertyRef Name="SalesmanID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>

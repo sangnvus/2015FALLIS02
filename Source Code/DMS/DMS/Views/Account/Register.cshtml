@@ -14,15 +14,13 @@
             <div class="col-md-5">
                 <section class="section register inner-right-xs">
                     <h2 class="bordered">Tạo tài khoản </h2>
-
                     <form role="form" class="register-form cf-style-1">
-                        <label id="warning" style="color: red;display: none">-Xin hãy nhập đầy đủ những thông tin bắt buộc.</label><br/>
-                        <label id="email-notvalid" style="color: red;display: none">-Địa chỉ email không có thật.xin nhập lại địa chỉ email khác.</label><br />
-                        <label id="warning_1" style="color: red;display: none">-Không thể tìm thấy địa chỉ bạn vừa nhập.Xin vui lòng thử địa chỉ khác.</label><br />
+                        <label id="warning" style="color: red;display: none">-Xin hãy nhập đầy đủ những thông tin bắt buộc.</label>
+                        @*<label id="email-notvalid" style="color: red;display: none">-Địa chỉ email không có thật.xin nhập lại địa chỉ email khác.<br /></label>*@
                         <p>Thông tin cá nhân</p>
                         <div class="field-row">
                             <label>Email<span style="color: red">(*)</span></label>
-                            <input id="email" type="text" class="form-control">
+                            <input id="email" type="text" class="form-control"><label id="email-notvalid" style="color: red;display: none">-Địa chỉ email không có thật.xin nhập lại địa chỉ email khác.<br /></label>
                         </div><!-- /.field-row -->
                         <div class="field-row">
                             <label>Mật khẩu<span style="color: red">(*)</span></label>
@@ -50,6 +48,7 @@
                             </div>
                             <label>Địa chỉ nhà thuốc<span style="color: red">(*)</span></label>
                             <input id="drugstore-address" type="text" class="form-control" onchange="decodeCoordinate()">
+                            <label id="warning_1" style="color: red;display: none">-Không thể tìm thấy địa chỉ bạn vừa nhập.Xin vui lòng thử địa chỉ khác.<br /></label>
                             <input id="Coordinate" hidden="hidden" />
                         </div><!-- /.field-row -->
                         <div class="field-row">
