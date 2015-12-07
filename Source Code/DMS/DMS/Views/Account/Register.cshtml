@@ -24,7 +24,7 @@
                         </div><!-- /.field-row -->
                         <div class="field-row">
                             <label>Mật khẩu<span style="color: red">(*)</span></label>
-                            <input id="password" type="password" class="form-control">
+                            <input minlength="6" id="password" type="password" class="form-control">
                         </div><!-- /.field-row -->
                         <div class="field-row">
                             <label>Tên đầy đủ<span style="color: red">(*)</span></label>
@@ -57,12 +57,14 @@
                                             new { @class = "form-control", style = "width:250px", id = "city" })*@
                             @Html.DropDownListFor(modelItem => City, new SelectList(City, "CityID", "CityName"), "---Chọn thành phố ---",
                                                              new { @class = "form-control", style = "width:250px", id = "city" })
+                            <label id="warning_city" style="color: red;display: none">-Hãy chọn thành phố.<br /></label>
                             @*<input id="drugstore-address" type="text" class="form-control">*@
                             <input id="Coordinate" hidden="hidden" />
                         </div><!-- /.field-row -->
                         <div class="field-row">
                             <label>Quận<span style="color: red">(*)</span></label>
                             <select id="district" style="width:250px" class="form-control"></select>
+                            <label id="warning_district" style="color: red;display: none">-Hãy chọn quận.<br /></label>
                             @*@Html.DropDownList("---Chọn quận ---",new SelectList(District, "DistrictID", "DistrictName"),
                                             new { @class = "form-control", style = "width:250px", id = "district" })*@
                             @*<input id="drugstore-address" type="text" class="form-control">*@
@@ -96,8 +98,15 @@
         var drugstoreAddress = $("#drugstore-address").val();
         var coordinate = $("#Coordinate").val();
         var district = $("#district").val();
+        var city = $("#city").val();
         if (coordinate == "") {
             $("#warning_1").css("display", "inline");
+        }
+        if (city == null||city =="") {
+            $("#warning_city").css("display", "inline");
+        }
+        if (district == null || district == "") {
+            $("#warning_district").css("display", "inline");
         }
         if (coordinate != "") {
             $("#warning_1").css("display", "none");
@@ -105,7 +114,10 @@
         if (!isEmail(email)) {
             $("#email-notvalid").css("display", "inline");
         }
-        if (isEmail(email) && email.length > 0 && password.length > 0 && drugstoreName.length > 0 && drugstoreAddress.length > 0 && fullname.length > 0) {
+        if (isEmail(email) && email.length > 0 &&
+            password.length > 0 && drugstoreName.length > 0
+            && drugstoreAddress.length > 0 && fullname.length > 0 && city != null && city != ""
+        && district != null && district != "") {
             $("#email-notvalid").css("display", "none");
             $.ajax({
                 url: '/Account/RegisterDrugstoreAccount',
