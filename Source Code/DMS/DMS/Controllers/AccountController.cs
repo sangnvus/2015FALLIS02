@@ -384,6 +384,7 @@ namespace DMS.Controllers
                     unitOfWork.AccountRepository.Update(account);
                     unitOfWork.AccountRepository.SaveChanges();
                     result = true;
+                    Session["User"] = account;
                     return Json(result);
                 }
             }
