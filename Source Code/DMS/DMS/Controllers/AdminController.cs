@@ -155,7 +155,7 @@ namespace DMS.Controllers
             Account salesman = new Account();
             AccountProfile salesmanProfile = new AccountProfile();
             salesman.Email = email;
-            salesman.RoleID = 2;
+            salesman.RoleID = 3;
 
             salesman.Password = md5(password);
             //salesmanProfile.Email = email;

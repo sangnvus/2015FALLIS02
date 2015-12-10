@@ -16,8 +16,10 @@
                 <div class="col-md-6">
                     <h4 style="font-style: oblique; color:blue">***Thông tin tài khoản</h4>
                     <div class="field-row">
-                        <label>Tên tài khoản</label>
-                        <input id="username" type="text" placeholder="tên tài khoản" class="form-control">
+                        @*<label>Tên tài khoản</label>
+                        <input id="username" type="text" placeholder="tên tài khoản" class="form-control">*@
+                        <label>Địa chỉ email</label>
+                        <input id="email" type="text" class="form-control">
                     </div>
                     <!-- /.field-row -->
                     <div class="field-row">
@@ -39,10 +41,10 @@
                         <input id="coordinate" type="text" hidden="hidden" />
                     </div>
                     <!-- /.field-row -->
-                    <div class="field-row">
+                    @*<div class="field-row">
                         <label>Địa chỉ email</label>
                         <input id="email" type="text" class="form-control">
-                    </div>
+                    </div>*@
                     <!-- /.field-row -->
                     <div class="field-row">
                         <label>Số điện thoại</label>
@@ -83,7 +85,9 @@
             url: '/Admin/CreateNewStaff',
             method: 'POST',
             data: { "username": username, "password": password, "fullname": fullname, "email": email, "phonenumber": phonenumber, "address": address, "coordinate": coordinate },
-            success: function (result) { }
+            success: function(result) {
+                window.location.href = "@Url.Action("ListStaff","Admin")";
+            }
         });
     }
     function decodeCoordinate() {
