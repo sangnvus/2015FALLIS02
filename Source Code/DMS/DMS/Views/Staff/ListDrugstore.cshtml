@@ -182,16 +182,16 @@
                     </table>
                 </div>
                 <br />
-                <div>
+                @*<div>
                     Thêm nhà thuốc từ tập tin Excel:
-                    @using (Html.BeginForm("ImportExcel", "Staff", FormMethod.Post,
+                    using (Html.BeginForm("ImportExcel", "Staff", FormMethod.Post,
                         new { enctype = "multipart/form-data" }))
                     {
 
                         <input type="file" name="file" id="file" />
                         <input type="submit" value="OK" />
                     }
-                </div>
+                </div>*@
             </div>
         </div>
     </div>

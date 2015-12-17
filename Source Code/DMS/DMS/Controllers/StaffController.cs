@@ -369,6 +369,8 @@ namespace DMS.Controllers
                     return HttpNotFound();
                 }
                 ViewBag.DrugstoreTypeID = new SelectList(unitOfWork.DrugStoreTypeRepository.GetAll(), "DrugstoreTypeID", "DrugstoreTypeName", drugStore.DrugstoreTypeID);
+                ViewBag.CityID = new SelectList(unitOfWork.CityRepository.GetAll(), "CityID", "CityName", drugStore.District.CityID);
+                ViewBag.DistrictID = new SelectList(unitOfWork.DistrictRepository.GetAll(), "DistrictID", "DistrictName", drugStore.DistrictID);
                 return View(drugStore);
             }
             return RedirectToAction("Index", "Home");
@@ -383,7 +385,7 @@ namespace DMS.Controllers
             drugstoretemp.Address = drugStore.Address;
             drugstoretemp.Coordinate = drugStore.Coordinate;
             drugstoretemp.DrugstoreTypeID = drugStore.DrugstoreTypeID;
-
+            drugstoretemp.DistrictID = drugStore.DistrictID;
             unitOfWork.DrugStoreRepository.Update(drugstoretemp);
             unitOfWork.DrugStoreRepository.SaveChanges();
             return RedirectToAction("ListDrugstore");

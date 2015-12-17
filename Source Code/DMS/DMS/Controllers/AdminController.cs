@@ -189,7 +189,7 @@ namespace DMS.Controllers
             delivery.Address = address;
             delivery.IsActive = true;
             unitOfWork.DeliverymanRepository.Insert(delivery);
-            unitOfWork.AccountRepository.SaveChanges();
+            unitOfWork.DeliverymanRepository.SaveChanges();
             result = true;
             return Json(result);
         }

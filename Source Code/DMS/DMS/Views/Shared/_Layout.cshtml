@@ -64,7 +64,7 @@
                     <ul>
                         <li><a href="@Url.Action("Index", "Home")">Trang Chủ</a></li>
                         <li><a href="@Url.Action("ShowCart", "ShoppingCart")">Tạo Đơn Hàng</a></li>
-                        @if (Username != null)
+                        @if (Username != null && UserRole.Equals("DrugstoreUser"))
                         {
                             <li><a href="@Url.Action("OrderHistory", "Order")">Lịch sử đơn hàng</a></li>
                             <li><a href="@Url.Action("PaymentHistory", "Payment")">Lịch sử thanh toán</a></li>

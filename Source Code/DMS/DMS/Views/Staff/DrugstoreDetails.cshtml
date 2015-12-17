@@ -40,7 +40,7 @@
                                     </td>
                                     <td>
                                         @*<input type="text" name="DrugstoreName" value="" id="drugstoreName" />*@
-                                        <label id="drugstoreName"></label>
+                                        <label id="drugstoreName">@Model.DrugstoreName</label>
                                         @*@Html.DisplayFor(model => model.DrugstoreName)*@
                                     </td>
                                 </tr>
@@ -51,8 +51,26 @@
                                     <td>
                                         <div id="location" onchange="decodeCoordinate()">
                                             @*@Html.DisplayFor(model => model.Address)*@
-                                            <label id="address"></label>
+                                            <label id="address">@Model.Address</label>
                                         </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Quận:</strong>
+                                    </td>
+                                    <td>
+                                            @*@Html.DisplayFor(model => model.Address)*@
+                                            <label id="address">@Model.District.DistrictName</label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Thành phố:</strong>
+                                    </td>
+                                    <td>
+                                            @*@Html.DisplayFor(model => model.Address)*@
+                                            <label id="address">@Model.District.City.CityName</label>
                                     </td>
                                 </tr>
                                 <tr>
@@ -61,7 +79,17 @@
                                         <strong>Khách hàng:</strong>
                                     </td>
                                     <td>
-                                        <label id="fullName"></label>
+                                        <label id="fullName">@Model.Account.AccountProfile.FullName</label>
+
+                                    </td>
+                                </tr>
+                                <tr>
+
+                                    <td>
+                                        <strong>Email:</strong>
+                                    </td>
+                                    <td>
+                                        <label id="fullName">@Model.Account.Email</label>
 
                                     </td>
                                 </tr>
@@ -70,7 +98,7 @@
                                         <strong>Số điện thoại:</strong>
                                     </td>
                                     <td>
-                                        <label id="phone"></label>
+                                        <label id="phone">@Model.Account.AccountProfile.Phone</label>
                                     </td>
                                 </tr>
                                 <tr>
@@ -109,7 +137,7 @@
 <script type="text/javascript">
 
     window.onload = GetCoordinate();
-    window.onload = GetUserInfo();
+    //window.onload = GetUserInfo();
 
     function initialize() {
         var mapOptions = {
