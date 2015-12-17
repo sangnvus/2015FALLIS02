@@ -282,6 +282,7 @@ namespace DMS.Controllers
         {
             if (ModelState.IsValid)
             {
+                drugType.IsActive = true;
                 unitOfWork.DrugTypeRepository.Update(drugType);
                 unitOfWork.DrugTypeRepository.SaveChanges();
                 return RedirectToAction("ListCategory");
