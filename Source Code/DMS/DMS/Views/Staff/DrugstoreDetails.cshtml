@@ -79,7 +79,11 @@
                                         <strong>Khách hàng:</strong>
                                     </td>
                                     <td>
-                                        <label id="fullName">@Model.Account.AccountProfile.FullName</label>
+                                        @if (@Model.Account!=null&&@Model.Account.AccountProfile != null)
+                                        {
+                                            <label id="fullName">@Model.Account.AccountProfile.FullName</label>
+
+                                        }
 
                                     </td>
                                 </tr>
@@ -89,8 +93,10 @@
                                         <strong>Email:</strong>
                                     </td>
                                     <td>
-                                        <label id="fullName">@Model.Account.Email</label>
-
+                                        @if (@Model.Account != null)
+                                        {
+                                            <label id="fullName">@Model.Account.Email</label>
+                                        }
                                     </td>
                                 </tr>
                                 <tr>
@@ -98,7 +104,10 @@
                                         <strong>Số điện thoại:</strong>
                                     </td>
                                     <td>
-                                        <label id="phone">@Model.Account.AccountProfile.Phone</label>
+                                        @if (@Model.Account != null && @Model.Account.AccountProfile != null)
+                                        {
+                                            <label id="phone">@Model.Account.AccountProfile.Phone</label>
+                                        }
                                     </td>
                                 </tr>
                                 <tr>

@@ -282,6 +282,7 @@ namespace DMS.Controllers
         {
             if (ModelState.IsValid)
             {
+                drugType.IsActive = true;
                 unitOfWork.DrugTypeRepository.Update(drugType);
                 unitOfWork.DrugTypeRepository.SaveChanges();
                 return RedirectToAction("ListCategory");
@@ -395,43 +396,23 @@ namespace DMS.Controllers
 
         public ActionResult DeleteDrugstore(int id)
         {
-            //try
-            //{
-            //    var drugstoretemp = unitOfWork.DrugStoreRepository.GetByID(id);
-            //    //drugstoretemp.DrugstoreName = drugStore.DrugstoreName;
-            //    //drugstoretemp.Address = drugStore.Address;
-            //    //drugstoretemp.Coordinate = drugStore.Coordinate;
-            //    //drugstoretemp.DrugstoreTypeID = drugStore.DrugstoreTypeID;
-            //    if (drugstoretemp.DrugstoreGroupID != null)
-            //    {
-            //        var drugstoreGroupID = drugstoretemp.DrugstoreGroupID;
+            try
+            {
+                var drugstoretemp = unitOfWork.DrugStoreRepository.GetByID(id);
+                //drugstoretemp.DrugstoreName = drugStore.DrugstoreName;
+                //drugstoretemp.Address = drugStore.Address;
+                //drugstoretemp.Coordinate = drugStore.Coordinate;
+                //drugstoretemp.DrugstoreTypeID = drugStore.DrugstoreTypeID;
+                    if (drugstoretemp.OwnerID == null)
+                    {
+                        unitOfWork.DrugStoreRepository.Delete(drugstoretemp);
+                        unitOfWork.DrugStoreRepository.SaveChanges();
+                    }
+            }
+            catch (Exception)
+            {
 
-            //        if (drugstoretemp.OwnerID == null)
-            //        {
-            //            unitOfWork.DrugStoreRepository.Delete(drugstoretemp);
-            //            unitOfWork.DrugStoreRepository.SaveChanges();
-            //        }
-            //        var drugstoreGroup = unitOfWork.DrugstoreGroupRepository.GetByID(drugstoreGroupID);
-            //        //var listDrugstore = unitOfWork.DrugStoreRepository.Get(b => b.DrugstoreGroupID==drugstoreGroupID).ToList();
-            //        if (drugstoreGroup.Drugstores.Count == 0)
-            //        {
-            //            unitOfWork.DrugstoreGroupRepository.Delete(drugstoreGroup);
-            //            unitOfWork.DrugstoreGroupRepository.SaveChanges();
-            //        }
-            //    }
-            //    else
-            //    {
-            //        if (drugstoretemp.OwnerID == null)
-            //        {
-            //            unitOfWork.DrugStoreRepository.Delete(drugstoretemp);
-            //            unitOfWork.DrugStoreRepository.SaveChanges();
-            //        }
-            //    }
-            //}
-            //catch (Exception)
-            //{
-
-            //}
+            }
 
 
             return RedirectToAction("ListDrugstore");
@@ -714,15 +695,15 @@ namespace DMS.Controllers
         //    return View(listDrugstore);
         //}
 
-        public ActionResult ApprovedDrugstore(int id)
-        {
-            var staff = (Account)Session["User"];
-            var drugstore = unitOfWork.DrugStoreRepository.GetByID(id);
-            //drugstore.ApprovedByStaffID = staff.AccountID;
-            unitOfWork.DrugStoreRepository.Update(drugstore);
-            unitOfWork.DrugStoreRepository.SaveChanges();
-            return RedirectToAction("ApproveDrugstore", "Staff");
-        }
+        //public ActionResult ApprovedDrugstore(int id)
+        //{
+        //    var staff = (Account)Session["User"];
+        //    var drugstore = unitOfWork.DrugStoreRepository.GetByID(id);
+        //    //drugstore.ApprovedByStaffID = staff.AccountID;
+        //    unitOfWork.DrugStoreRepository.Update(drugstore);
+        //    unitOfWork.DrugStoreRepository.SaveChanges();
+        //    return RedirectToAction("ApproveDrugstore", "Staff");
+        //}
 
         /// <summary>
         /// Quản lí yêu cầu

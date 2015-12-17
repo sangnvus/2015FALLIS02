@@ -58,7 +58,7 @@
                                         <strong>Quận:</strong>
                                     </td>
                                     <td>
-                                        <select id="district" style="width:250px" class="form-control"></select>
+                                        <select id="DistrictID" name="DistrictID"style=" width:250px" class="form-control"></select>
                                     </td>
                                 </tr>
                                 <tr>
@@ -138,9 +138,9 @@
                 type: "POST",
                 data: { "cityId": cityID },
             }).done(function (data) {
-                $("#district").empty();
+                $("#DistrictID").empty();
                 for (var i = 0; i < data.length; i++) {
-                    $("#district").append("<option value=" + data[i].DistrictID + ">" + data[i].DistrictName + "</option>");
+                    $("#DistrictID").append("<option value=" + data[i].DistrictID + ">" + data[i].DistrictName + "</option>");
                 }
             }).fail(function (xhr) {
                 alert("Xin hãy chọn lại thành phố !");

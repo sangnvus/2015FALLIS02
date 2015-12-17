@@ -99,7 +99,7 @@
                             <!-- /#subtotal-holder -->
                             <div class="place-order-button">
                                 <a href="@Url.Action("ApproveOrder", "Staff",new {id=Model.DrugOrderID})" class="le-button big">xác nhận</a>
-                                <a href="@Url.Action("CancelOrder", "Staff")" style="background-color: red;" class="le-button big">Hủy bỏ</a>
+                                <a href="@Url.Action("CancelOrder", "Staff", new { id = Model.DrugOrderID })" style="background-color: red;" class="le-button big">Hủy bỏ</a>
                                 @*<a href="@Url.Action("ListOrderNotApprove", "Staff")" style="background-color: green" class="le-button big">trở lại</a>*@
                             </div>
                         </div>
