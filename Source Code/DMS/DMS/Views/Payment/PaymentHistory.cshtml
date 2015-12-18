@@ -101,10 +101,29 @@
         $("#datepicker").datepicker();
     });
     $(document).ready(function () {
-        var table = $('#tablePayment').DataTable({
-            "order": [[0, "desc"]]
+        //var table = $('#tablePayment').DataTable({
+        //    "order": [[0, "desc"]]
+        //});
+        var table = $('#tablePayment').dataTable({
+            "oLanguage": {
+                "sSearch": "Tìm kiếm:",
+                "sLengthMenu": "Hiển thị _MENU_ thanh toán",
+                "sInfoEmpty": "Không có dữ liệu",
+                "sZeroRecords": "Không có dữ liệu",
+                "sEmptyTable": "Không có dữ liệu",
+                "sInfo": "Hiển thị _START_ đến _END_ trên _TOTAL_ thanh toán",
+                "oAria": {
+                    "sSortDescending": "+",
+                    "sSortAscending": "-",
+                },
+                "oPaginate": {
+                    "sNext": "Trang sau",
+                    "sPrevious": "Trang trước"
+                },
+            }, "order": [[0, "desc"]]
         });
     });
+
     $(document).on("click", "#UpdatePaymentStatus", function () {
         // Get the id from the link 
         var date = $("#datepicker").datepicker({ dateFormat: 'mm/dd/yyyy' }).val();;

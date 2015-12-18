@@ -125,7 +125,10 @@
             }
         });
     }*@
-    window.onload = GetCoordinate();
+    $(window).load(function () {
+        //initialize();
+        GetCoordinate();
+    });
 
     function initialize() {
         var mapOptions = {

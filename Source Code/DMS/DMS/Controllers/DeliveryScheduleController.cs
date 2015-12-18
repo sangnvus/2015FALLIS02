@@ -51,6 +51,8 @@ namespace DMS.Controllers
                     payment.Balance = paymentHistory.Last().Balance - drugOrder.TotalPrice;
                     drugstore.Debt =drugstore.Debt- drugOrder.TotalPrice;
                 }
+                payment.FullName = drugstore.Account.AccountProfile.FullName;
+                payment.PhoneNumber = drugstore.Account.AccountProfile.Phone;
                 payment.Date = DateTime.Now;
                 payment.PaymentType = true;
                 payment.IsActive = true;

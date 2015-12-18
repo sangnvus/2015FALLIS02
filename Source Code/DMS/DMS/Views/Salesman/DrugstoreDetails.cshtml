@@ -40,7 +40,7 @@
                                     </td>
                                     <td>
                                         @*<input type="text" name="DrugstoreName" value="" id="drugstoreName" />*@
-                                        <label id="drugstoreName"></label>
+                                        <label id="drugstoreName">@Model.DrugstoreName</label>
                                         @*@Html.DisplayFor(model => model.DrugstoreName)*@
                                     </td>
                                 </tr>
@@ -49,10 +49,28 @@
                                         <strong>Địa chỉ:</strong>
                                     </td>
                                     <td>
-                                        <div id="location" onchange="decodeCoordinate()">
+                                        <div id="location">
                                             @*@Html.DisplayFor(model => model.Address)*@
-                                            <label id="address"></label>
+                                            <label id="address">@Model.Address</label>
                                         </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Quận:</strong>
+                                    </td>
+                                    <td>
+                                        @*@Html.DisplayFor(model => model.Address)*@
+                                        <label id="address">@Model.District.DistrictName</label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Thành phố:</strong>
+                                    </td>
+                                    <td>
+                                        @*@Html.DisplayFor(model => model.Address)*@
+                                        <label id="address">@Model.District.City.CityName</label>
                                     </td>
                                 </tr>
                                 <tr>
@@ -61,8 +79,20 @@
                                         <strong>Khách hàng:</strong>
                                     </td>
                                     <td>
-                                        <label id="fullName"></label>
+                                        <label id="fullName">@Model.Account.AccountProfile.FullName</label>
 
+                                    </td>
+                                </tr>
+                                <tr>
+
+                                    <td>
+                                        <strong>Email:</strong>
+                                    </td>
+                                    <td>
+                                        @if (@Model.Account != null)
+                                        {
+                                            <label id="fullName">@Model.Account.Email</label>
+                                        }
                                     </td>
                                 </tr>
                                 <tr>
@@ -70,7 +100,7 @@
                                         <strong>Số điện thoại:</strong>
                                     </td>
                                     <td>
-                                        <label id="phone"></label>
+                                        <label id="phone">@Model.Account.AccountProfile.Phone</label>
                                     </td>
                                 </tr>
                                 <tr>
@@ -108,12 +138,12 @@
 </p>
 <script type="text/javascript">
 
-    window.onload = GetCoordinate();
-    window.onload = GetUserInfo();
-
+    //window.onload = GetCoordinate();
+    //window.onload = GetUserInfo();
+    
     function initialize() {
         var mapOptions = {
-            center: new google.maps.LatLng(10.8230989, 106.6296638),
+            center: new google.maps.LatLng(21.0277640, 105.8341600),
             zoom: 15,
             mapTypeId: google.maps.MapTypeId.ROADMAP
         };
@@ -143,7 +173,7 @@
     }
 
     function GetCoordinate() {
-        var id = @Model.DrugstoreID
+        var id = @Model.DrugstoreID;
         $.ajax({
             url: "/Staff/GetCoordinate",
             contentType: "application/json",
@@ -159,23 +189,23 @@
     }
 
 
-    function decodeCoordinate() {
-        var address = document.getElementById("Address").value;
-        $.ajax({
-            url: "http://maps.googleapis.com/maps/api/geocode/json?address=" + address + "&sensor=false",
-            type: "POST",
-            success: function (res) {
-                var lat = res.results[0].geometry.location.lat;
-                var long = res.results[0].geometry.location.lng;
-                document.getElementById('Coordinate').value = res.results[0].geometry.location.lat + ', ' + res.results[0].geometry.location.lng;
-                mapActive(lat, long);
-            }
-        });
-    }
+        //function decodeCoordinate() {
+        //    var address = document.getElementById("Address").value;
+        //    $.ajax({
+        //        url: "http://maps.googleapis.com/maps/api/geocode/json?address=" + address + "&sensor=false",
+        //        type: "POST",
+        //        success: function (res) {
+        //            var lat = res.results[0].geometry.location.lat;
+        //            var long = res.results[0].geometry.location.lng;
+        //            document.getElementById('Coordinate').value = res.results[0].geometry.location.lat + ', ' + res.results[0].geometry.location.lng;
+        //            //mapActive(lat, long);
+        //        }
+        //    });
+        //}
 
 
-    function GetUserInfo() {
-        var id = @Model.DrugstoreID
+    @*function GetUserInfo() {
+        var id = @Model.DrugstoreID;
         $.ajax({
             url: '/Staff/OwnerDrugstoreDetails',
             type: 'POST',
@@ -187,7 +217,10 @@
                 document.getElementById('address').textContent = result.A;
             }
         });
-    }
-
+    }*@
+    $(window).load(function () {
+        //initialize();
+        GetCoordinate();
+    });
 
 </script>

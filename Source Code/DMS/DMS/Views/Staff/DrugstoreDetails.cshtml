@@ -12,7 +12,7 @@
     <div class="col-lg-10">
         <div class="panel panel-primary">
             <div class="panel-heading">
-                Thông tin nhà thuốc
+                Thông tin nhà thuốc - @Model.DrugstoreName
             </div>
             <!-- /.panel-heading -->
             <div class="panel-body">
@@ -49,7 +49,7 @@
                                         <strong>Địa chỉ:</strong>
                                     </td>
                                     <td>
-                                        <div id="location" onchange="decodeCoordinate()">
+                                        <div id="location" >
                                             @*@Html.DisplayFor(model => model.Address)*@
                                             <label id="address">@Model.Address</label>
                                         </div>
@@ -61,7 +61,7 @@
                                     </td>
                                     <td>
                                             @*@Html.DisplayFor(model => model.Address)*@
-                                            <label id="address">@Model.District.DistrictName</label>
+                                        <label id="address" >@Model.District.DistrictName</label>
                                     </td>
                                 </tr>
                                 <tr>
@@ -70,7 +70,7 @@
                                     </td>
                                     <td>
                                             @*@Html.DisplayFor(model => model.Address)*@
-                                            <label id="address">@Model.District.City.CityName</label>
+                                            <label id="address" >@Model.District.City.CityName</label>
                                     </td>
                                 </tr>
                                 <tr>
@@ -144,13 +144,12 @@
     @Html.ActionLink("Trở về danh sách", "ListDrugstore")
 </p>
 <script type="text/javascript">
-
-    window.onload = GetCoordinate();
+ 
     //window.onload = GetUserInfo();
 
     function initialize() {
         var mapOptions = {
-            center: new google.maps.LatLng(10.8230989, 106.6296638),
+            center: new google.maps.LatLng(21.0277640, 105.8341600),
             zoom: 15,
             mapTypeId: google.maps.MapTypeId.ROADMAP
         };
@@ -180,7 +179,8 @@
     }
 
     function GetCoordinate() {
-        var id = @Model.DrugstoreID
+        //mapActive(14.0583240, 108.2771990);
+        var id = @Model.DrugstoreID;
         $.ajax({
             url: "/Staff/GetCoordinate",
             contentType: "application/json",
@@ -205,7 +205,7 @@
                 var lat = res.results[0].geometry.location.lat;
                 var long = res.results[0].geometry.location.lng;
                 document.getElementById('Coordinate').value = res.results[0].geometry.location.lat + ', ' + res.results[0].geometry.location.lng;
-                mapActive(lat, long);
+                //mapActive(lat, long);
             }
         });
     }
@@ -225,6 +225,11 @@
             }
         });
     }
+
+    $(window).load(function() {
+         //initialize();
+         GetCoordinate();
+    });
 
 
 </script>

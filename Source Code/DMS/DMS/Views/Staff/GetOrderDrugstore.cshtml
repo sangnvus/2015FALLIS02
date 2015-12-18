@@ -31,8 +31,27 @@
                         @orderDetail.Drug.DrugName<br />
                     }
                 </td>
-                <td>@item.DateOrder</td>
-                <td>@item.IsActive</td>
+                <td>@item.DateOrder.Value.ToString("dd-MM-yyyy")</td>
+                @*<td>@item.IsActive</td>*@
+                <td id="status-@item.DrugOrderID">
+                    @if (item.Status == 1 || item.Status == 2)
+                    {
+                        <p>Chưa được xử lý</p>
+                    }
+                    else if (item.Status == 5)
+                    {
+                        <p style='color:red'>Đã hủy</p>
+                    }
+                    else if (item.Status == 3)
+                    {
+                        <p>Đang được xử lý</p>
+                    }
+                    else
+                    {
+                        <p>Hoàn thành</p>
+                    }
+            </td>
+
                 <td>@item.TotalPrice VND</td>
             </tr>
             }
