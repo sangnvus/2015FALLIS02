@@ -111,7 +111,7 @@
         });
 
 
-        $(".assignSalesman").on("click", function () {
+        $(document).on("click",".assignSalesman", function () {
             var saveLink = "@Url.Action("AssignSaleman", "Staff")";
             districtID = $(this).attr("id");
             //var link = saveLink + "?districtID=" + districtID + "&salesmanID=" + $("#salesman-" + districtID).val();
