@@ -70,7 +70,10 @@
                                     </td>
                                     <td>
                                         @*@Html.DisplayFor(model => model.Address)*@
-                                        <label id="address">@Model.District.City.CityName</label>
+                                        @if (Model.District != null && @Model.District.City != null)
+                                        {
+                                            <label id="address">@Model.District.City.CityName</label>
+                                        }
                                     </td>
                                 </tr>
                                 <tr>
@@ -79,8 +82,10 @@
                                         <strong>Khách hàng:</strong>
                                     </td>
                                     <td>
-                                        <label id="fullName">@Model.Account.AccountProfile.FullName</label>
-
+                                        @if (Model.Account != null && @Model.Account.AccountProfile != null)
+                                        {
+                                            <label id="fullName">@Model.Account.AccountProfile.FullName</label>
+                                        }
                                     </td>
                                 </tr>
                                 <tr>
@@ -100,7 +105,10 @@
                                         <strong>Số điện thoại:</strong>
                                     </td>
                                     <td>
-                                        <label id="phone">@Model.Account.AccountProfile.Phone</label>
+                                        @if (Model.Account != null && @Model.Account.AccountProfile != null)
+                                        {
+                                            <label id="phone">@Model.Account.AccountProfile.Phone</label>
+                                        }
                                     </td>
                                 </tr>
                                 <tr>

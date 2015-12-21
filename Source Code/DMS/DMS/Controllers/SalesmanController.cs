@@ -15,7 +15,7 @@ namespace DMS.Controllers
         // GET: /Salesman/
         public ActionResult Index()
         {
-            return View("ListDrugstore");
+            return RedirectToAction("ListDrugstore");
         }
         /// <summary>
         /// List danh sách những drugstore đã  dc verify bởi salesman 
